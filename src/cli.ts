@@ -5,6 +5,7 @@ import { captureCommand } from "./capture.js";
 import { newCommand } from "./new.js";
 import { listTemplates, printTemplates } from "./templates.js";
 import { statusCommand } from "./status.js";
+import { updateCommand } from "./update.js";
 import type { NoteType } from "./types.js";
 
 const program = new Command();
@@ -68,6 +69,15 @@ program
   .option("--vault <path>", "Path to vault (defaults to current directory)")
   .action((opts) => {
     statusCommand(opts.vault);
+  });
+
+// ─── update ─────────────────────────────────────────────────
+program
+  .command("update")
+  .description("Update Uteuk prompts and templates")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .action((opts) => {
+    updateCommand(opts.vault);
   });
 
 program.parse();
