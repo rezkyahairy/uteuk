@@ -1,16 +1,18 @@
-import {
+import fs from "fs-extra";
+import { join } from "node:path";
+import chalk from "chalk";
+import ora from "ora";
+import { resolveVaultPath } from "./vault.js";
+import { fileDiff } from "./fs.js";
+
+const {
   existsSync,
   readFileSync,
   writeFileSync,
   copySync,
   readdirSync,
   ensureDirSync,
-} from "fs-extra";
-import { join } from "node:path";
-import chalk from "chalk";
-import ora from "ora";
-import { resolveVaultPath } from "./vault.js";
-import { fileDiff } from "./fs.js";
+} = fs;
 
 const ASSET_PATHS = [
   { src: ".uteuk", dest: ".uteuk", type: "directory" as const },

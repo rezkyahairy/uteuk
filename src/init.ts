@@ -1,17 +1,19 @@
-import {
-  existsSync,
-  readdirSync,
-  copySync,
-  ensureDirSync,
-  writeFileSync,
-  readFileSync,
-} from "fs-extra";
+import fs from "fs-extra";
 import { join, basename } from "node:path";
 import chalk from "chalk";
 import ora from "ora";
 import type { InitMode, VaultState } from "./types.js";
 import { detectVaultState, resolveVaultPath } from "./vault.js";
 import { safeCopy, ensureDirectory } from "./fs.js";
+
+const {
+  existsSync,
+  readdirSync,
+  copySync,
+  ensureDirSync,
+  writeFileSync,
+  readFileSync,
+} = fs;
 
 const PARA_FOLDERS = [
   "00-Inbox",

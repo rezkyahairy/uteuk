@@ -1,14 +1,10 @@
-import {
-  existsSync,
-  ensureDirSync,
-  writeFileSync,
-  readFileSync,
-  readdirSync,
-} from "fs-extra";
+import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import type { NoteType } from "./types.js";
 import { resolveVaultPath } from "./vault.js";
+
+const { existsSync, ensureDirSync, writeFileSync, readFileSync, readdirSync } = fs;
 
 const NOTE_TYPE_MAP: Record<NoteType, string> = {
   project: "01-Projects",

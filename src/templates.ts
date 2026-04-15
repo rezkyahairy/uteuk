@@ -1,8 +1,10 @@
-import { existsSync, readdirSync, readFileSync } from "fs-extra";
+import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import type { TemplateInfo } from "./types.js";
 import { resolveVaultPath } from "./vault.js";
+
+const { existsSync, readdirSync, readFileSync } = fs;
 
 export function listTemplates(vaultPath: string | undefined): TemplateInfo[] {
   const resolvedPath = resolveVaultPath(vaultPath);
