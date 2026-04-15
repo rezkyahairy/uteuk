@@ -4,6 +4,7 @@ import { initCommand } from "./init.js";
 import { captureCommand } from "./capture.js";
 import { newCommand } from "./new.js";
 import { listTemplates, printTemplates } from "./templates.js";
+import { statusCommand } from "./status.js";
 import type { NoteType } from "./types.js";
 
 const program = new Command();
@@ -58,6 +59,15 @@ program
   .action((opts) => {
     const templates = listTemplates(opts.vault);
     printTemplates(templates);
+  });
+
+// ─── status ─────────────────────────────────────────────────
+program
+  .command("status")
+  .description("Check vault health")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .action((opts) => {
+    statusCommand(opts.vault);
   });
 
 program.parse();
