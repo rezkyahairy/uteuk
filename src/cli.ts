@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import pkg from "../package.json" with { type: "json" };
 import { initCommand } from "./init.js";
+import { captureCommand } from "./capture.js";
 
 const program = new Command();
 
@@ -18,6 +19,15 @@ program
   .option("--force", "Force --from-scratch on non-empty directory")
   .action((vault, opts) => {
     initCommand(vault, opts);
+  });
+
+// ─── capture ────────────────────────────────────────────────
+program
+  .command("capture [text]")
+  .description("Capture a raw idea into 00-Inbox/")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .action((text, opts) => {
+    captureCommand(text, opts.vault);
   });
 
 program.parse();
