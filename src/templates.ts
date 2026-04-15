@@ -9,7 +9,9 @@ export function listTemplates(vaultPath: string | undefined): TemplateInfo[] {
   const templatesDir = join(resolvedPath, "05-Templates");
 
   if (!existsSync(templatesDir)) {
-    console.log(chalk.yellow("No templates found. Run `uteuk init` to install them."));
+    console.log(
+      chalk.yellow("No templates found. Run `uteuk init` to install them."),
+    );
     return [];
   }
 
@@ -40,7 +42,9 @@ export function printTemplates(templates: TemplateInfo[]): void {
 
   console.log(chalk.bold("\nAvailable templates:\n"));
   for (const t of templates) {
-    console.log(`  ${chalk.cyan(t.name.padEnd(25))} ${chalk.dim(t.description)}`);
+    console.log(
+      `  ${chalk.cyan(t.name.padEnd(25))} ${chalk.dim(t.description)}`,
+    );
   }
   console.log();
 }

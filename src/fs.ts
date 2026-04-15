@@ -1,11 +1,4 @@
-import {
-  copy,
-  ensureDir,
-  exists,
-  readFile,
-  writeFile,
-  rename,
-} from "fs-extra";
+import { copy, ensureDir, exists, readFile, writeFile, rename } from "fs-extra";
 import { join, dirname } from "node:path";
 import { randomUUID } from "node:crypto";
 

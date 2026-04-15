@@ -7,12 +7,7 @@ export type VaultState =
 
 export type InitMode = "existing" | "from-scratch";
 
-export type NoteType =
-  | "project"
-  | "daily"
-  | "resource"
-  | "moc"
-  | "task";
+export type NoteType = "project" | "daily" | "resource" | "moc" | "task";
 
 export interface VaultStatus {
   inboxCount: number;
