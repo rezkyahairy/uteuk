@@ -2,6 +2,9 @@ import { Command } from "commander";
 import pkg from "../package.json" with { type: "json" };
 import { initCommand } from "./init.js";
 import { captureCommand } from "./capture.js";
+import { newCommand } from "./new.js";
+import { listTemplates, printTemplates } from "./templates.js";
+import type { NoteType } from "./types.js";
 
 const program = new Command();
 
@@ -28,6 +31,33 @@ program
   .option("--vault <path>", "Path to vault (defaults to current directory)")
   .action((text, opts) => {
     captureCommand(text, opts.vault);
+  });
+
+// ─── new ────────────────────────────────────────────────────
+program
+  .command("new <type> [title]")
+  .description("Create a note from a template")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .argument("<type>", "Note type: project, daily, resource, moc, task")
+  .action((type: string, title: string | undefined, opts) => {
+    const validTypes: NoteType[] = ["project", "daily", "resource", "moc", "task"];
+    if (!validTypes.includes(type as NoteType)) {
+      console.error(
+        `Error: Invalid type "${type}". Valid types: ${validTypes.join(", ")}`,
+      );
+      process.exit(1);
+    }
+    newCommand(type as NoteType, title, opts.vault);
+  });
+
+// ─── templates ──────────────────────────────────────────────
+program
+  .command("templates")
+  .description("List available note templates")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .action((opts) => {
+    const templates = listTemplates(opts.vault);
+    printTemplates(templates);
   });
 
 program.parse();
