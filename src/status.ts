@@ -1,12 +1,16 @@
-import { existsSync, readdirSync, readFileSync } from "fs-extra";
+import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import type { VaultStatus } from "./types.js";
 import { resolveVaultPath } from "./vault.js";
 
+const { existsSync, readdirSync, readFileSync } = fs;
+
 const STALE_DAYS = 30;
 
-export async function statusCommand(vaultPath: string | undefined): Promise<void> {
+export async function statusCommand(
+  vaultPath: string | undefined,
+): Promise<void> {
   const resolvedPath = resolveVaultPath(vaultPath);
 
   if (!existsSync(resolvedPath)) {
@@ -58,7 +62,9 @@ async function findOrphanedNotes(vaultPath: string): Promise<string[]> {
   return orphaned;
 }
 
-async function findStaleMocs(vaultPath: string): Promise<{ name: string; lastUpdated: Date }[]> {
+async function findStaleMocs(
+  vaultPath: string,
+): Promise<{ name: string; lastUpdated: Date }[]> {
   const stale: { name: string; lastUpdated: Date }[] = [];
   const mocDir = join(vaultPath, "03-Resources");
 
@@ -83,10 +89,10 @@ async function findStaleMocs(vaultPath: string): Promise<{ name: string; lastUpd
 }
 
 async function getLastSyncDate(vaultPath: string): Promise<Date | null> {
-  // Check git log for last commit date
   try {
     const { execSync } = await import("node:child_process");
-    const output = execSync("/usr/bin/git log -1 --format=%ci", {
+    const gitCmd = process.platform === "win32" ? "git" : "/usr/bin/git";
+    const output = execSync(`${gitCmd} log -1 --format=%ci`, {
       cwd: vaultPath,
       encoding: "utf-8",
     }).trim();
@@ -133,7 +139,9 @@ function printStatus(status: VaultStatus): void {
       console.log(`  ${chalk.dim("- " + note)}`);
     }
     if (status.orphanedNotes.length > 5) {
-      console.log(chalk.dim(`  ... and ${status.orphanedNotes.length - 5} more`));
+      console.log(
+        chalk.dim(`  ... and ${status.orphanedNotes.length - 5} more`),
+      );
     }
   } else {
     console.log(`\n${chalk.bold("🔗 Orphaned Notes:")} ${chalk.green("None")}`);
@@ -157,7 +165,9 @@ function printStatus(status: VaultStatus): void {
       `\n${chalk.bold("🔄 Last Sync:")} ${chalk.cyan(status.lastSync.toISOString().split("T")[0])}`,
     );
   } else {
-    console.log(`\n${chalk.bold("🔄 Last Sync:")} ${chalk.dim("Not tracked (no git)")}`);
+    console.log(
+      `\n${chalk.bold("🔄 Last Sync:")} ${chalk.dim("Not tracked (no git)")}`,
+    );
   }
 
   // Project health
@@ -165,8 +175,14 @@ function printStatus(status: VaultStatus): void {
     console.log(`\n${chalk.bold("📁 Projects:")}`);
     for (const proj of status.projectHealth) {
       const statusColor =
-        proj.status === "active" ? chalk.green : proj.status === "completed" ? chalk.dim : chalk.yellow;
-      console.log(`  ${chalk.cyan(proj.name)} ${statusColor("(" + proj.status + ")")}`);
+        proj.status === "active"
+          ? chalk.green
+          : proj.status === "completed"
+            ? chalk.dim
+            : chalk.yellow;
+      console.log(
+        `  ${chalk.cyan(proj.name)} ${statusColor("(" + proj.status + ")")}`,
+      );
     }
   }
 

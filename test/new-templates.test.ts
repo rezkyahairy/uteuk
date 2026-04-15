@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { existsSync, mkdirSync, rmSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  rmSync,
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { newCommand } from "../src/new.js";
@@ -12,11 +19,26 @@ beforeEach(() => {
   // Create minimal templates
   const tplDir = join(TEST_DIR, "05-Templates");
   mkdirSync(tplDir, { recursive: true });
-  writeFileSync(join(tplDir, "Project.md"), "---\ncreated: {{date}}\ntags: [project]\n---\n\n# {{title}}\n\n## Goals\n");
-  writeFileSync(join(tplDir, "Daily Note.md"), "---\ndate: {{date}}\ntags: [daily]\n---\n\n# Daily Note - {{date}}\n\n");
-  writeFileSync(join(tplDir, "Resource.md"), "---\ncreated: {{date}}\ntags: [resource]\n---\n\n# Resource\n\n");
-  writeFileSync(join(tplDir, "MOC.md"), "---\ncreated: {{date}}\ntags: [moc]\n---\n\n# MOC\n\n");
-  writeFileSync(join(tplDir, "Task.md"), "---\ncreated: {{date}}\nstatus: open\ntags: [task]\n---\n\n# Task\n\n");
+  writeFileSync(
+    join(tplDir, "Project.md"),
+    "---\ncreated: {{date}}\ntags: [project]\n---\n\n# {{title}}\n\n## Goals\n",
+  );
+  writeFileSync(
+    join(tplDir, "Daily Note.md"),
+    "---\ndate: {{date}}\ntags: [daily]\n---\n\n# Daily Note - {{date}}\n\n",
+  );
+  writeFileSync(
+    join(tplDir, "Resource.md"),
+    "---\ncreated: {{date}}\ntags: [resource]\n---\n\n# Resource\n\n",
+  );
+  writeFileSync(
+    join(tplDir, "MOC.md"),
+    "---\ncreated: {{date}}\ntags: [moc]\n---\n\n# MOC\n\n",
+  );
+  writeFileSync(
+    join(tplDir, "Task.md"),
+    "---\ncreated: {{date}}\nstatus: open\ntags: [task]\n---\n\n# Task\n\n",
+  );
 });
 
 afterEach(() => {
@@ -72,7 +94,10 @@ describe("new command", () => {
 
   it("substitutes {{date}} frontmatter", async () => {
     await newCommand("project", "Date Test", TEST_DIR);
-    const content = readFileSync(join(TEST_DIR, "01-Projects", "Date Test.md"), "utf-8");
+    const content = readFileSync(
+      join(TEST_DIR, "01-Projects", "Date Test.md"),
+      "utf-8",
+    );
     expect(content).toContain("created:");
     expect(content).not.toContain("{{date}}");
   });

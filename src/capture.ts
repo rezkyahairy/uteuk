@@ -1,7 +1,9 @@
-import { ensureDirSync, existsSync, writeFileSync } from "fs-extra";
+import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import { resolveVaultPath } from "./vault.js";
+
+const { ensureDirSync, existsSync, writeFileSync } = fs;
 
 export async function captureCommand(
   text: string | undefined,
@@ -40,5 +42,7 @@ tags: [fleeting]
 
   writeFileSync(filePath, content, "utf-8");
   console.log(chalk.green(`✓ Note created: ${filePath}`));
-  console.log(`\n${chalk.dim("Next: Ask your AI agent to process this note.")}`);
+  console.log(
+    `\n${chalk.dim("Next: Ask your AI agent to process this note.")}`,
+  );
 }

@@ -1,8 +1,18 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { existsSync, mkdirSync, writeFileSync, rmSync, copyFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  writeFileSync,
+  rmSync,
+  copyFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { detectVaultState, resolveVaultPath, validateVaultPath } from "../src/vault.js";
+import {
+  detectVaultState,
+  resolveVaultPath,
+  validateVaultPath,
+} from "../src/vault.js";
 import { safeCopy, fileDiff, ensureDirectory } from "../src/fs.js";
 
 const TEST_DIR = join(tmpdir(), "uteuk-test-" + Date.now());
@@ -60,7 +70,7 @@ describe("resolveVaultPath", () => {
 
   it("resolves relative path to absolute", () => {
     const result = resolveVaultPath("some/path");
-    expect(result).toContain("some/path");
+    expect(result).toMatch(/some[/\\]path$/);
   });
 });
 
@@ -82,7 +92,10 @@ describe("safeCopy", () => {
     const destDir = join(TEST_DIR, "dest");
     mkdirSync(srcDir, { recursive: true });
     writeFileSync(join(srcDir, "file.txt"), "hello");
-    const result = await safeCopy(join(srcDir, "file.txt"), join(destDir, "file.txt"));
+    const result = await safeCopy(
+      join(srcDir, "file.txt"),
+      join(destDir, "file.txt"),
+    );
     expect(result.copied).toBe(true);
     expect(result.skipped).toBe(false);
     expect(existsSync(join(destDir, "file.txt"))).toBe(true);
@@ -95,7 +108,10 @@ describe("safeCopy", () => {
     mkdirSync(destDir, { recursive: true });
     writeFileSync(join(destDir, "file.txt"), "exists");
     writeFileSync(join(srcDir, "other.txt"), "source");
-    const result = await safeCopy(join(srcDir, "other.txt"), join(destDir, "file.txt"));
+    const result = await safeCopy(
+      join(srcDir, "other.txt"),
+      join(destDir, "file.txt"),
+    );
     expect(result.copied).toBe(false);
     expect(result.skipped).toBe(true);
   });

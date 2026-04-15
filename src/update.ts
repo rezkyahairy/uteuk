@@ -1,16 +1,18 @@
-import {
+import fs from "fs-extra";
+import { join } from "node:path";
+import chalk from "chalk";
+import ora from "ora";
+import { resolveVaultPath } from "./vault.js";
+import { fileDiff } from "./fs.js";
+
+const {
   existsSync,
   readFileSync,
   writeFileSync,
   copySync,
   readdirSync,
   ensureDirSync,
-} from "fs-extra";
-import { join } from "node:path";
-import chalk from "chalk";
-import ora from "ora";
-import { resolveVaultPath } from "./vault.js";
-import { fileDiff } from "./fs.js";
+} = fs;
 
 const ASSET_PATHS = [
   { src: ".uteuk", dest: ".uteuk", type: "directory" as const },
@@ -21,7 +23,9 @@ const ASSET_PATHS = [
   { src: "OPENCLAW.md", dest: "OPENCLAW.md", type: "file" as const },
 ];
 
-export async function updateCommand(vaultPath: string | undefined): Promise<void> {
+export async function updateCommand(
+  vaultPath: string | undefined,
+): Promise<void> {
   const resolvedPath = resolveVaultPath(vaultPath);
 
   if (!existsSync(resolvedPath)) {
@@ -54,10 +58,11 @@ export async function updateCommand(vaultPath: string | undefined): Promise<void
       console.log(chalk.green("  New file — will be added"));
     }
 
-    const answer = await prompt(
-      `Update ${change.file}? [Y/n/s(kip)]: `,
-      ["y", "n", "s"],
-    );
+    const answer = await prompt(`Update ${change.file}? [Y/n/s(kip)]: `, [
+      "y",
+      "n",
+      "s",
+    ]);
 
     if (answer === "n" || answer === "s") {
       skippedChanges.push(change.file);
@@ -71,14 +76,18 @@ export async function updateCommand(vaultPath: string | undefined): Promise<void
   if (acceptedChanges.length > 0) {
     const applySpinner = ora("Applying updates...").start();
     await applyChanges(resolvedPath, acceptedChanges);
-    applySpinner.succeed(chalk.green(`Updated ${acceptedChanges.length} file(s).`));
+    applySpinner.succeed(
+      chalk.green(`Updated ${acceptedChanges.length} file(s).`),
+    );
   } else {
     console.log(chalk.yellow("\nNo updates applied."));
   }
 
   if (skippedChanges.length > 0) {
     console.log(
-      chalk.dim(`\nSkipped ${skippedChanges.length} file(s): ${skippedChanges.join(", ")}`),
+      chalk.dim(
+        `\nSkipped ${skippedChanges.length} file(s): ${skippedChanges.join(", ")}`,
+      ),
     );
   }
 }
@@ -160,7 +169,10 @@ async function findChanges(vaultPath: string): Promise<FileChange[]> {
   return changes;
 }
 
-async function applyChanges(vaultPath: string, acceptedFiles: string[]): Promise<void> {
+async function applyChanges(
+  vaultPath: string,
+  acceptedFiles: string[],
+): Promise<void> {
   for (const asset of ASSET_PATHS) {
     const srcBase = new URL(`../${asset.src}`, import.meta.url).pathname;
     const destBase = join(vaultPath, asset.dest);
@@ -186,20 +198,27 @@ async function applyChanges(vaultPath: string, acceptedFiles: string[]): Promise
   }
 }
 
-async function prompt(message: string, validOptions: string[]): Promise<string> {
+async function prompt(
+  message: string,
+  validOptions: string[],
+): Promise<string> {
   const readline = await import("node:readline/promises");
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
 
-  const answer = (await rl.question(chalk.dim("  ") + message)).trim().toLowerCase();
+  const answer = (await rl.question(chalk.dim("  ") + message))
+    .trim()
+    .toLowerCase();
   rl.close();
 
   if (validOptions.includes(answer) || answer === "") {
     return answer === "" ? "y" : answer;
   }
 
-  console.log(chalk.yellow("  Invalid option. Please choose: " + validOptions.join(", ")));
+  console.log(
+    chalk.yellow("  Invalid option. Please choose: " + validOptions.join(", ")),
+  );
   return prompt(message, validOptions);
 }

@@ -1,10 +1,19 @@
-import { existsSync, readdirSync, copySync, ensureDirSync, writeFileSync, readFileSync } from "fs-extra";
+import fs from "fs-extra";
 import { join, basename } from "node:path";
 import chalk from "chalk";
 import ora from "ora";
 import type { InitMode, VaultState } from "./types.js";
 import { detectVaultState, resolveVaultPath } from "./vault.js";
 import { safeCopy, ensureDirectory } from "./fs.js";
+
+const {
+  existsSync,
+  readdirSync,
+  copySync,
+  ensureDirSync,
+  writeFileSync,
+  readFileSync,
+} = fs;
 
 const PARA_FOLDERS = [
   "00-Inbox",
@@ -16,7 +25,12 @@ const PARA_FOLDERS = [
   "06-Daily",
 ];
 
-const AGENT_CONFIGS = ["AGENT.md", "CLAUDE.md", "QWEN.md", "OPENCLAW.md"] as const;
+const AGENT_CONFIGS = [
+  "AGENT.md",
+  "CLAUDE.md",
+  "QWEN.md",
+  "OPENCLAW.md",
+] as const;
 
 /**
  * Copy bundled assets from the repo's bundled directory to the vault.
@@ -52,7 +66,11 @@ async function initExisting(vaultPath: string): Promise<void> {
   const destUteuk = join(vaultPath, ".uteuk");
 
   if (existsSync(destUteuk)) {
-    spinner.warn(chalk.yellow(".uteuk/ already exists. Skipping. Use `uteuk update` to refresh."));
+    spinner.warn(
+      chalk.yellow(
+        ".uteuk/ already exists. Skipping. Use `uteuk update` to refresh.",
+      ),
+    );
   } else {
     copySync(srcUteuk, destUteuk, { overwrite: false });
   }
@@ -91,8 +109,10 @@ async function initExisting(vaultPath: string): Promise<void> {
 
   // Print summary
   console.log("\n" + chalk.bold("Installed:"));
-  if (existsSync(destUteuk)) console.log(`  ${chalk.cyan(".uteuk/")} — AI prompts and commands`);
-  if (existsSync(destTemplates)) console.log(`  ${chalk.cyan("05-Templates/")} — Note templates`);
+  if (existsSync(destUteuk))
+    console.log(`  ${chalk.cyan(".uteuk/")} — AI prompts and commands`);
+  if (existsSync(destTemplates))
+    console.log(`  ${chalk.cyan("05-Templates/")} — Note templates`);
   for (const config of AGENT_CONFIGS) {
     if (existsSync(join(vaultPath, config))) {
       console.log(`  ${chalk.cyan(config)} — AI agent config`);
@@ -103,7 +123,10 @@ async function initExisting(vaultPath: string): Promise<void> {
   console.log(`  Run ${chalk.cyan("uteuk capture")} to drop a raw idea.`);
 }
 
-async function initFromScratch(vaultPath: string, force: boolean): Promise<void> {
+async function initFromScratch(
+  vaultPath: string,
+  force: boolean,
+): Promise<void> {
   const isNonEmpty = existsSync(vaultPath) && !isDirEmpty(vaultPath);
 
   if (isNonEmpty && !force) {
@@ -121,7 +144,14 @@ async function initFromScratch(vaultPath: string, force: boolean): Promise<void>
   await ensureDirectory(obsidianDir);
   const appConfig = join(obsidianDir, "app.json");
   if (!existsSync(appConfig)) {
-    writeFileSync(appConfig, JSON.stringify({ newFileLocation: "folder", newFileFolderPath: "00-Inbox" }, null, 2));
+    writeFileSync(
+      appConfig,
+      JSON.stringify(
+        { newFileLocation: "folder", newFileFolderPath: "00-Inbox" },
+        null,
+        2,
+      ),
+    );
   }
 
   // 2. Create full PARA structure
@@ -130,7 +160,9 @@ async function initFromScratch(vaultPath: string, force: boolean): Promise<void>
   }
 
   // 3. Copy .uteuk/ all prompts + commands
-  copySync(getBundledPath(".uteuk"), join(vaultPath, ".uteuk"), { overwrite: false });
+  copySync(getBundledPath(".uteuk"), join(vaultPath, ".uteuk"), {
+    overwrite: false,
+  });
 
   // 4. Copy templates
   const destTemplates = join(vaultPath, "05-Templates");

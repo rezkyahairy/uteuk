@@ -42,7 +42,13 @@ program
   .option("--vault <path>", "Path to vault (defaults to current directory)")
   .argument("<type>", "Note type: project, daily, resource, moc, task")
   .action((type: string, title: string | undefined, opts) => {
-    const validTypes: NoteType[] = ["project", "daily", "resource", "moc", "task"];
+    const validTypes: NoteType[] = [
+      "project",
+      "daily",
+      "resource",
+      "moc",
+      "task",
+    ];
     if (!validTypes.includes(type as NoteType)) {
       console.error(
         `Error: Invalid type "${type}". Valid types: ${validTypes.join(", ")}`,

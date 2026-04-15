@@ -1,15 +1,19 @@
-import { existsSync, readdirSync, readFileSync } from "fs-extra";
+import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import type { TemplateInfo } from "./types.js";
 import { resolveVaultPath } from "./vault.js";
+
+const { existsSync, readdirSync, readFileSync } = fs;
 
 export function listTemplates(vaultPath: string | undefined): TemplateInfo[] {
   const resolvedPath = resolveVaultPath(vaultPath);
   const templatesDir = join(resolvedPath, "05-Templates");
 
   if (!existsSync(templatesDir)) {
-    console.log(chalk.yellow("No templates found. Run `uteuk init` to install them."));
+    console.log(
+      chalk.yellow("No templates found. Run `uteuk init` to install them."),
+    );
     return [];
   }
 
@@ -40,7 +44,9 @@ export function printTemplates(templates: TemplateInfo[]): void {
 
   console.log(chalk.bold("\nAvailable templates:\n"));
   for (const t of templates) {
-    console.log(`  ${chalk.cyan(t.name.padEnd(25))} ${chalk.dim(t.description)}`);
+    console.log(
+      `  ${chalk.cyan(t.name.padEnd(25))} ${chalk.dim(t.description)}`,
+    );
   }
   console.log();
 }

@@ -1,8 +1,10 @@
-import { existsSync, ensureDirSync, writeFileSync, readFileSync, readdirSync } from "fs-extra";
+import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import type { NoteType } from "./types.js";
 import { resolveVaultPath } from "./vault.js";
+
+const { existsSync, ensureDirSync, writeFileSync, readFileSync, readdirSync } = fs;
 
 const NOTE_TYPE_MAP: Record<NoteType, string> = {
   project: "01-Projects",
@@ -48,7 +50,10 @@ export async function newCommand(
   const fileName = `${noteName}.md`;
 
   // Read template and substitute
-  const templateContent = readFileSync(join(templatesDir, templateFile), "utf-8");
+  const templateContent = readFileSync(
+    join(templatesDir, templateFile),
+    "utf-8",
+  );
   const content = substituteFrontmatter(templateContent, dateStr);
 
   const filePath = join(targetDir, fileName);
@@ -56,7 +61,10 @@ export async function newCommand(
   console.log(chalk.green(`✓ ${noteType} note created: ${filePath}`));
 }
 
-function getTemplateFile(noteType: NoteType, templatesDir: string): string | null {
+function getTemplateFile(
+  noteType: NoteType,
+  templatesDir: string,
+): string | null {
   const typeToFile: Record<NoteType, string> = {
     project: "Project.md",
     daily: "Daily Note.md",
@@ -72,7 +80,8 @@ function getTemplateFile(noteType: NoteType, templatesDir: string): string | nul
   // Fallback: try case-insensitive match
   const allTemplates = readdirSync(templatesDir);
   const match = allTemplates.find(
-    (f: string) => f.toLowerCase().startsWith(noteType.toLowerCase()) && f.endsWith(".md"),
+    (f: string) =>
+      f.toLowerCase().startsWith(noteType.toLowerCase()) && f.endsWith(".md"),
   );
   return match || null;
 }
