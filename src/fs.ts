@@ -1,6 +1,8 @@
-import { copy, ensureDir, exists, readFile, writeFile, rename } from "fs-extra";
+import fs from "fs-extra";
 import { join, dirname } from "node:path";
 import { randomUUID } from "node:crypto";
+
+const { copy, ensureDir, exists, readFile, writeFile, rename } = fs;
 
 /**
  * Copy a file only if destination doesn't exist (safe copy).

@@ -1,8 +1,10 @@
-import { existsSync, readdirSync, readFileSync } from "fs-extra";
+import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import type { VaultStatus } from "./types.js";
 import { resolveVaultPath } from "./vault.js";
+
+const { existsSync, readdirSync, readFileSync } = fs;
 
 const STALE_DAYS = 30;
 

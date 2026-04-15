@@ -1,7 +1,9 @@
-import { ensureDirSync, existsSync, writeFileSync } from "fs-extra";
+import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import { resolveVaultPath } from "./vault.js";
+
+const { ensureDirSync, existsSync, writeFileSync } = fs;
 
 export async function captureCommand(
   text: string | undefined,
