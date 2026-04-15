@@ -1,5 +1,9 @@
 # Uteuk
 
+<p align="center">
+  <img src="logo.png" alt="Uteuk Logo" width="200">
+</p>
+
 > **Uteuk** *(Basa Sunda: Brain)* — An AI-assisted Second Brain for people who think in connections, not folders.
 
 ## What Is This?
