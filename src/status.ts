@@ -6,7 +6,9 @@ import { resolveVaultPath } from "./vault.js";
 
 const STALE_DAYS = 30;
 
-export async function statusCommand(vaultPath: string | undefined): Promise<void> {
+export async function statusCommand(
+  vaultPath: string | undefined,
+): Promise<void> {
   const resolvedPath = resolveVaultPath(vaultPath);
 
   if (!existsSync(resolvedPath)) {
@@ -58,7 +60,9 @@ async function findOrphanedNotes(vaultPath: string): Promise<string[]> {
   return orphaned;
 }
 
-async function findStaleMocs(vaultPath: string): Promise<{ name: string; lastUpdated: Date }[]> {
+async function findStaleMocs(
+  vaultPath: string,
+): Promise<{ name: string; lastUpdated: Date }[]> {
   const stale: { name: string; lastUpdated: Date }[] = [];
   const mocDir = join(vaultPath, "03-Resources");
 
@@ -133,7 +137,9 @@ function printStatus(status: VaultStatus): void {
       console.log(`  ${chalk.dim("- " + note)}`);
     }
     if (status.orphanedNotes.length > 5) {
-      console.log(chalk.dim(`  ... and ${status.orphanedNotes.length - 5} more`));
+      console.log(
+        chalk.dim(`  ... and ${status.orphanedNotes.length - 5} more`),
+      );
     }
   } else {
     console.log(`\n${chalk.bold("🔗 Orphaned Notes:")} ${chalk.green("None")}`);
@@ -157,7 +163,9 @@ function printStatus(status: VaultStatus): void {
       `\n${chalk.bold("🔄 Last Sync:")} ${chalk.cyan(status.lastSync.toISOString().split("T")[0])}`,
     );
   } else {
-    console.log(`\n${chalk.bold("🔄 Last Sync:")} ${chalk.dim("Not tracked (no git)")}`);
+    console.log(
+      `\n${chalk.bold("🔄 Last Sync:")} ${chalk.dim("Not tracked (no git)")}`,
+    );
   }
 
   // Project health
@@ -165,8 +173,14 @@ function printStatus(status: VaultStatus): void {
     console.log(`\n${chalk.bold("📁 Projects:")}`);
     for (const proj of status.projectHealth) {
       const statusColor =
-        proj.status === "active" ? chalk.green : proj.status === "completed" ? chalk.dim : chalk.yellow;
-      console.log(`  ${chalk.cyan(proj.name)} ${statusColor("(" + proj.status + ")")}`);
+        proj.status === "active"
+          ? chalk.green
+          : proj.status === "completed"
+            ? chalk.dim
+            : chalk.yellow;
+      console.log(
+        `  ${chalk.cyan(proj.name)} ${statusColor("(" + proj.status + ")")}`,
+      );
     }
   }
 

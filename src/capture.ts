@@ -40,5 +40,7 @@ tags: [fleeting]
 
   writeFileSync(filePath, content, "utf-8");
   console.log(chalk.green(`✓ Note created: ${filePath}`));
-  console.log(`\n${chalk.dim("Next: Ask your AI agent to process this note.")}`);
+  console.log(
+    `\n${chalk.dim("Next: Ask your AI agent to process this note.")}`,
+  );
 }

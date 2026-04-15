@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { existsSync, mkdirSync, rmSync, writeFileSync, readFileSync, readdirSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  rmSync,
+  writeFileSync,
+  readFileSync,
+  readdirSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileDiff } from "../src/fs.js";
@@ -9,14 +16,22 @@ const TEST_DIR = join(tmpdir(), "uteuk-update-test-" + Date.now());
 beforeEach(() => {
   mkdirSync(TEST_DIR, { recursive: true });
   // Create minimal bundled assets
-  mkdirSync(join(TEST_DIR, "bundled", ".uteuk", "prompts"), { recursive: true });
+  mkdirSync(join(TEST_DIR, "bundled", ".uteuk", "prompts"), {
+    recursive: true,
+  });
   writeFileSync(
     join(TEST_DIR, "bundled", ".uteuk", "prompts", "capture.md"),
     "# Capture\n\nCapture prompt content",
   );
   mkdirSync(join(TEST_DIR, "bundled", "templates"), { recursive: true });
-  writeFileSync(join(TEST_DIR, "bundled", "templates", "Project.md"), "---\ncreated: {{date}}\n---\n\n# Project\n");
-  writeFileSync(join(TEST_DIR, "bundled", "AGENT.md"), "# Agent Rules\n\nRule 1");
+  writeFileSync(
+    join(TEST_DIR, "bundled", "templates", "Project.md"),
+    "---\ncreated: {{date}}\n---\n\n# Project\n",
+  );
+  writeFileSync(
+    join(TEST_DIR, "bundled", "AGENT.md"),
+    "# Agent Rules\n\nRule 1",
+  );
 });
 
 afterEach(() => {
@@ -106,10 +121,17 @@ describe("update command logic", () => {
     mkdirSync(vaultPrompts, { recursive: true });
 
     // Add a new prompt in bundled that vault doesn't have
-    writeFileSync(join(bundledPrompts, "process.md"), "# Process\n\nProcess prompt");
+    writeFileSync(
+      join(bundledPrompts, "process.md"),
+      "# Process\n\nProcess prompt",
+    );
 
-    const bundledFiles = readdirSync(bundledPrompts).filter((f) => f.endsWith(".md"));
-    const vaultFiles = readdirSync(vaultPrompts).filter((f) => f.endsWith(".md"));
+    const bundledFiles = readdirSync(bundledPrompts).filter((f) =>
+      f.endsWith(".md"),
+    );
+    const vaultFiles = readdirSync(vaultPrompts).filter((f) =>
+      f.endsWith(".md"),
+    );
 
     expect(bundledFiles).toContain("process.md");
     expect(vaultFiles).not.toContain("process.md");
