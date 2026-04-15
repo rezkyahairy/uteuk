@@ -83,10 +83,10 @@ async function findStaleMocs(vaultPath: string): Promise<{ name: string; lastUpd
 }
 
 async function getLastSyncDate(vaultPath: string): Promise<Date | null> {
-  // Check git log for last commit date
   try {
     const { execSync } = await import("node:child_process");
-    const output = execSync("/usr/bin/git log -1 --format=%ci", {
+    const gitCmd = process.platform === "win32" ? "git" : "/usr/bin/git";
+    const output = execSync(`${gitCmd} log -1 --format=%ci`, {
       cwd: vaultPath,
       encoding: "utf-8",
     }).trim();

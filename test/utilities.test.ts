@@ -60,7 +60,7 @@ describe("resolveVaultPath", () => {
 
   it("resolves relative path to absolute", () => {
     const result = resolveVaultPath("some/path");
-    expect(result).toContain("some/path");
+    expect(result).toMatch(/some[/\\]path$/);
   });
 });
 

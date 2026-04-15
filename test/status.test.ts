@@ -8,14 +8,15 @@ const TEST_DIR = join(tmpdir(), "uteuk-status-test-" + Date.now());
 
 beforeEach(() => {
   mkdirSync(TEST_DIR, { recursive: true });
+  const gitCmd = process.platform === "win32" ? "git" : "/usr/bin/git";
   // Initialize git for sync tests
   try {
-    execSync("/usr/bin/git init", { cwd: TEST_DIR });
-    execSync('/usr/bin/git config user.name "test"', { cwd: TEST_DIR });
-    execSync('/usr/bin/git config user.email "test@test.com"', { cwd: TEST_DIR });
+    execSync(`${gitCmd} init`, { cwd: TEST_DIR });
+    execSync(`${gitCmd} config user.name "test"`, { cwd: TEST_DIR });
+    execSync(`${gitCmd} config user.email "test@test.com"`, { cwd: TEST_DIR });
     writeFileSync(join(TEST_DIR, "README.md"), "# test");
-    execSync("/usr/bin/git add -A", { cwd: TEST_DIR });
-    execSync('/usr/bin/git commit -m "init"', { cwd: TEST_DIR });
+    execSync(`${gitCmd} add -A`, { cwd: TEST_DIR });
+    execSync(`${gitCmd} commit -m "init"`, { cwd: TEST_DIR });
   } catch {
     // git may fail in temp dir, continue anyway
   }
@@ -71,7 +72,8 @@ tags: [moc]
   });
 
   it("should get last sync date from git", () => {
-    const output = execSync('/usr/bin/git log -1 --format=%ci', {
+    const gitCmd = process.platform === "win32" ? "git" : "/usr/bin/git";
+    const output = execSync(`${gitCmd} log -1 --format=%ci`, {
       cwd: TEST_DIR,
       encoding: "utf-8",
     }).trim();
