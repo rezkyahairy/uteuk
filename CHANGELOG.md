@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-04-17
+
+### Fixed
+- Resolve prettier lint error in `src/new.ts` (line 7 formatting) that blocked CI publish workflow
+
+## [0.1.1] - 2026-04-17
+
+### Fixed
+- No changes — re-tag for CI publish retry
+
 ## [0.1.0] - 2026-04-15
 
 ### Added

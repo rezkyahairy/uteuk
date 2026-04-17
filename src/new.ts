@@ -4,7 +4,8 @@ import chalk from "chalk";
 import type { NoteType } from "./types.js";
 import { resolveVaultPath } from "./vault.js";
 
-const { existsSync, ensureDirSync, writeFileSync, readFileSync, readdirSync } = fs;
+const { existsSync, ensureDirSync, writeFileSync, readFileSync, readdirSync } =
+  fs;
 
 const NOTE_TYPE_MAP: Record<NoteType, string> = {
   project: "01-Projects",
