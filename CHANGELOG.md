@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-04-17
+
+### Added
+- Note templates: Daily Note, Project, Resource, MOC, Task
+- Templates now bundled in npm package and installed by `uteuk init`
+
 ## [0.1.2] - 2026-04-17
 
 ### Fixed
