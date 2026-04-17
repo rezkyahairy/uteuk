@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Note templates: Daily Note, Project, Resource, MOC, Task
-- Templates now bundled in npm package and installed by `uteuk init`
+- `/uteuk` Qwen Code skill registration — enables `/uteuk capture`, `/uteuk process`, etc. as real slash commands
+- `.qwen/skills/uteuk/SKILL.md` installed by `uteuk init` into vault's `.qwen/skills/`
+- Updated `init.ts` to install the skill into vault's `.qwen/skills/uteuk/`
+- Updated `package.json` files list to include `.qwen/`
 
 ## [0.1.2] - 2026-04-17
 
