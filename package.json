@@ -1,6 +1,6 @@
 {
   "name": "uteuk",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "AI-assisted Second Brain CLI — install and manage Uteuk in your Obsidian vault",
   "main": "dist/cli.js",
   "bin": {
