@@ -97,7 +97,16 @@ async function initExisting(vaultPath: string): Promise<void> {
     }
   }
 
-  // 4. Create missing PARA folders
+  // 4. Copy /uteuk skill registration (only if missing)
+  const srcSkills = getBundledPath(".qwen/skills/uteuk");
+  const destSkills = join(vaultPath, ".qwen/skills/uteuk");
+  if (existsSync(srcSkills)) {
+    if (!existsSync(destSkills)) {
+      copySync(srcSkills, destSkills, { overwrite: false });
+    }
+  }
+
+  // 5. Create missing PARA folders
   for (const folder of PARA_FOLDERS) {
     const dest = join(vaultPath, folder);
     if (!existsSync(dest)) {
@@ -113,6 +122,10 @@ async function initExisting(vaultPath: string): Promise<void> {
     console.log(`  ${chalk.cyan(".uteuk/")} — AI prompts and commands`);
   if (existsSync(destTemplates))
     console.log(`  ${chalk.cyan("05-Templates/")} — Note templates`);
+  if (existsSync(destSkills))
+    console.log(
+      `  ${chalk.cyan(".qwen/skills/uteuk/")} — /uteuk slash command`,
+    );
   for (const config of AGENT_CONFIGS) {
     if (existsSync(join(vaultPath, config))) {
       console.log(`  ${chalk.cyan(config)} — AI agent config`);
@@ -182,7 +195,14 @@ async function initFromScratch(
     }
   }
 
-  // 6. Create welcome note
+  // 6. Copy /uteuk skill registration
+  const srcSkills = getBundledPath(".qwen/skills/uteuk");
+  const destSkills = join(vaultPath, ".qwen/skills/uteuk");
+  if (existsSync(srcSkills) && !existsSync(destSkills)) {
+    copySync(srcSkills, destSkills, { overwrite: false });
+  }
+
+  // 7. Create welcome note
   const welcomePath = join(vaultPath, "00-Inbox", "Welcome to Uteuk.md");
   if (!existsSync(welcomePath)) {
     writeFileSync(
