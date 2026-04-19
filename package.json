@@ -10,10 +10,16 @@
   "files": [
     "dist",
     ".uteuk",
+    ".claude",
+    ".gemini",
+    ".opencode",
+    ".openclaw",
     ".qwen",
     "templates",
     "AGENT.md",
     "CLAUDE.md",
+    "GEMINI.md",
+    "OPENCODE.md",
     "QWEN.md",
     "OPENCLAW.md",
     "logo.png"

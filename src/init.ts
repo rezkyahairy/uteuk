@@ -28,8 +28,18 @@ const PARA_FOLDERS = [
 const AGENT_CONFIGS = [
   "AGENT.md",
   "CLAUDE.md",
+  "GEMINI.md",
+  "OPENCODE.md",
   "QWEN.md",
   "OPENCLAW.md",
+] as const;
+
+const SLASH_COMMAND_DIRS = [
+  ".claude/commands",
+  ".qwen/commands",
+  ".gemini/commands",
+  ".opencode/commands",
+  ".openclaw/commands",
 ] as const;
 
 /**
@@ -97,16 +107,23 @@ async function initExisting(vaultPath: string): Promise<void> {
     }
   }
 
-  // 4. Copy /uteuk skill registration (only if missing)
-  const srcSkills = getBundledPath(".qwen/skills/uteuk");
-  const destSkills = join(vaultPath, ".qwen/skills/uteuk");
-  if (existsSync(srcSkills)) {
-    if (!existsSync(destSkills)) {
-      copySync(srcSkills, destSkills, { overwrite: false });
+  // 4. Copy shared skills (only if missing)
+  const srcSkills = getBundledPath(".uteuk/skills");
+  const destSkills = join(vaultPath, ".uteuk/skills");
+  if (existsSync(srcSkills) && !existsSync(destSkills)) {
+    copySync(srcSkills, destSkills, { overwrite: false });
+  }
+
+  // 5. Copy slash commands (only if missing)
+  for (const dir of SLASH_COMMAND_DIRS) {
+    const src = getBundledPath(dir);
+    const dest = join(vaultPath, dir);
+    if (existsSync(src) && !existsSync(dest)) {
+      copySync(src, dest, { overwrite: false });
     }
   }
 
-  // 5. Create missing PARA folders
+  // 6. Create missing PARA folders
   for (const folder of PARA_FOLDERS) {
     const dest = join(vaultPath, folder);
     if (!existsSync(dest)) {
@@ -123,9 +140,13 @@ async function initExisting(vaultPath: string): Promise<void> {
   if (existsSync(destTemplates))
     console.log(`  ${chalk.cyan("05-Templates/")} — Note templates`);
   if (existsSync(destSkills))
-    console.log(
-      `  ${chalk.cyan(".qwen/skills/uteuk/")} — /uteuk slash command`,
-    );
+    console.log(`  ${chalk.cyan(".uteuk/skills/")} — Shared capabilities`);
+  for (const dir of SLASH_COMMAND_DIRS) {
+    if (existsSync(join(vaultPath, dir))) {
+      const agentName = dir.split("/")[0].replace(".", "");
+      console.log(`  ${chalk.cyan(dir + "/")} — ${agentName} slash commands`);
+    }
+  }
   for (const config of AGENT_CONFIGS) {
     if (existsSync(join(vaultPath, config))) {
       console.log(`  ${chalk.cyan(config)} — AI agent config`);
@@ -195,14 +216,23 @@ async function initFromScratch(
     }
   }
 
-  // 6. Copy /uteuk skill registration
-  const srcSkills = getBundledPath(".qwen/skills/uteuk");
-  const destSkills = join(vaultPath, ".qwen/skills/uteuk");
+  // 6. Copy shared skills
+  const srcSkills = getBundledPath(".uteuk/skills");
+  const destSkills = join(vaultPath, ".uteuk/skills");
   if (existsSync(srcSkills) && !existsSync(destSkills)) {
     copySync(srcSkills, destSkills, { overwrite: false });
   }
 
-  // 7. Create welcome note
+  // 7. Copy slash commands
+  for (const dir of SLASH_COMMAND_DIRS) {
+    const src = getBundledPath(dir);
+    const dest = join(vaultPath, dir);
+    if (existsSync(src) && !existsSync(dest)) {
+      copySync(src, dest, { overwrite: false });
+    }
+  }
+
+  // 8. Create welcome note
   const welcomePath = join(vaultPath, "00-Inbox", "Welcome to Uteuk.md");
   if (!existsSync(welcomePath)) {
     writeFileSync(
