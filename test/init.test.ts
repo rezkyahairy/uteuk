@@ -8,6 +8,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { initCommand } from "../src/init.js";
 
 const TEST_DIR = join(tmpdir(), "uteuk-init-test-" + Date.now());
@@ -164,7 +165,7 @@ describe("init command — shared skills", () => {
 
   it("does not reference .qwen/skills/uteuk in source code", async () => {
     const initSource = readFileSync(
-      new URL("../src/init.ts", import.meta.url).pathname,
+      fileURLToPath(new URL("../src/init.ts", import.meta.url)),
       "utf-8",
     );
     expect(initSource).not.toContain(".qwen/skills/uteuk");

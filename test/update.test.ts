@@ -9,6 +9,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { fileDiff } from "../src/fs.js";
 
 const TEST_DIR = join(tmpdir(), "uteuk-update-test-" + Date.now());
@@ -120,8 +121,9 @@ describe("update command", () => {
   });
 
   it("handles directory comparison logic", async () => {
-    const bundledPrompts = new URL("../.uteuk/prompts", import.meta.url)
-      .pathname;
+    const bundledPrompts = fileURLToPath(
+      new URL("../.uteuk/prompts", import.meta.url),
+    );
     const vaultPrompts = join(TEST_DIR, "vault", ".uteuk", "prompts");
     mkdirSync(vaultPrompts, { recursive: true });
 
