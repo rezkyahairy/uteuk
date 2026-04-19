@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { existsSync, mkdirSync, rmSync, readFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  rmSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { captureCommand } from "../src/capture.js";
@@ -63,5 +69,19 @@ describe("capture command", () => {
       .filter((f: string) => f.endsWith(".md"));
     // Filename should not contain special characters
     expect(notes[0]).not.toMatch(/[@#$%!]/);
+  });
+
+  it("uses existing 00-Inbox/ without recreating", async () => {
+    const inboxDir = join(TEST_DIR, "00-Inbox");
+    mkdirSync(inboxDir, { recursive: true });
+    writeFileSync(join(inboxDir, "existing.md"), "# existing");
+
+    await captureCommand("New idea", TEST_DIR);
+
+    const notes = require("node:fs")
+      .readdirSync(inboxDir)
+      .filter((f: string) => f.endsWith(".md"));
+    expect(notes.length).toBe(2);
+    expect(notes).toContain("existing.md");
   });
 });
