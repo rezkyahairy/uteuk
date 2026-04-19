@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import { join, basename } from "node:path";
+import { fileURLToPath } from "node:url";
 import chalk from "chalk";
 import ora from "ora";
 import type { InitMode, VaultState } from "./types.js";
@@ -47,7 +48,7 @@ const SLASH_COMMAND_DIRS = [
  * Bundled assets are resolved relative to the running script.
  */
 function getBundledPath(relative: string): string {
-  return new URL(`../${relative}`, import.meta.url).pathname;
+  return fileURLToPath(new URL(`../${relative}`, import.meta.url));
 }
 
 function isDirEmpty(dir: string): boolean {

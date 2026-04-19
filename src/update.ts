@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import chalk from "chalk";
 import ora from "ora";
 import { resolveVaultPath } from "./vault.js";
@@ -102,7 +103,7 @@ async function findChanges(vaultPath: string): Promise<FileChange[]> {
   const changes: FileChange[] = [];
 
   for (const asset of ASSET_PATHS) {
-    const srcBase = new URL(`../${asset.src}`, import.meta.url).pathname;
+    const srcBase = fileURLToPath(new URL(`../${asset.src}`, import.meta.url));
     const destBase = join(vaultPath, asset.dest);
 
     if (asset.type === "file") {
@@ -174,7 +175,7 @@ async function applyChanges(
   acceptedFiles: string[],
 ): Promise<void> {
   for (const asset of ASSET_PATHS) {
-    const srcBase = new URL(`../${asset.src}`, import.meta.url).pathname;
+    const srcBase = fileURLToPath(new URL(`../${asset.src}`, import.meta.url));
     const destBase = join(vaultPath, asset.dest);
 
     if (asset.type === "file") {
