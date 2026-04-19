@@ -244,4 +244,13 @@ describe("init command — edge cases", () => {
 
     expect(existsSync(join(TEST_DIR, "00-Inbox"))).toBe(false);
   });
+
+  it("creates vault path directory if it does not exist", async () => {
+    const nestedPath = join(TEST_DIR, "nested", "new", "vault");
+
+    await initCommand(nestedPath, { fromScratch: true });
+
+    expect(existsSync(nestedPath)).toBe(true);
+    expect(existsSync(join(nestedPath, "00-Inbox"))).toBe(true);
+  });
 });
