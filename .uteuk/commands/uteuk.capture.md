@@ -2,7 +2,7 @@
 description: Capture raw idea into Inbox
 ---
 > **DATE CHECK:** Use `{{date:YYYY-MM-DD}}` for current date.
-> Validate: `.qwen/skills/date-helper/DATE_CHECK.md`
+> Validate: `.uteuk/skills/date-helper/DATE_CHECK.md`
 
 Execute uteuk step: {{args}}
 
@@ -16,7 +16,7 @@ Execute uteuk step: {{args}}
 
 ## Date Validation
 Before creating any note:
-- [ ] Fetch current date from `.qwen/skills/date-helper/get-date.sh`
+- [ ] Fetch current date from `.uteuk/skills/date-helper/get-date.sh`
 - [ ] Verify year matches internet time (not system time)
-- [ ] Check `.qwen/skills/date-helper/DATE_CHECK.md`
+- [ ] Check `.uteuk/skills/date-helper/DATE_CHECK.md`
 - [ ] Use `{{date:YYYY-MM-DD}}` template

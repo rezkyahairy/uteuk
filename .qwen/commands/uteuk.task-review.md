@@ -19,5 +19,5 @@ Hard rules (from AGENT.md):
 Agent-specific config: See QWEN.md for processed tags and output format.
 
 For date validation before creating any note:
-- Run: bash .qwen/skills/date-helper/get-date.sh
-- Read: .qwen/skills/date-helper/DATE_CHECK.md
+- Run: bash .uteuk/skills/date-helper/get-date.sh
+- Read: .uteuk/skills/date-helper/DATE_CHECK.md
