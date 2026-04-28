@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import chalk from "chalk";
 import ora from "ora";
 import { resolveVaultPath } from "./vault.js";
@@ -19,8 +20,31 @@ const ASSET_PATHS = [
   { src: "templates", dest: "05-Templates", type: "directory" as const },
   { src: "AGENT.md", dest: "AGENT.md", type: "file" as const },
   { src: "CLAUDE.md", dest: "CLAUDE.md", type: "file" as const },
+  { src: "GEMINI.md", dest: "GEMINI.md", type: "file" as const },
+  { src: "OPENCODE.md", dest: "OPENCODE.md", type: "file" as const },
   { src: "QWEN.md", dest: "QWEN.md", type: "file" as const },
   { src: "OPENCLAW.md", dest: "OPENCLAW.md", type: "file" as const },
+  {
+    src: ".claude/commands",
+    dest: ".claude/commands",
+    type: "directory" as const,
+  },
+  { src: ".qwen/commands", dest: ".qwen/commands", type: "directory" as const },
+  {
+    src: ".gemini/commands",
+    dest: ".gemini/commands",
+    type: "directory" as const,
+  },
+  {
+    src: ".opencode/commands",
+    dest: ".opencode/commands",
+    type: "directory" as const,
+  },
+  {
+    src: ".openclaw/commands",
+    dest: ".openclaw/commands",
+    type: "directory" as const,
+  },
 ];
 
 export async function updateCommand(
@@ -102,7 +126,7 @@ async function findChanges(vaultPath: string): Promise<FileChange[]> {
   const changes: FileChange[] = [];
 
   for (const asset of ASSET_PATHS) {
-    const srcBase = new URL(`../${asset.src}`, import.meta.url).pathname;
+    const srcBase = fileURLToPath(new URL(`../${asset.src}`, import.meta.url));
     const destBase = join(vaultPath, asset.dest);
 
     if (asset.type === "file") {
@@ -135,7 +159,8 @@ async function findChanges(vaultPath: string): Promise<FileChange[]> {
       if (!existsSync(srcBase)) continue;
 
       const srcFiles = readdirSync(srcBase, { recursive: true }).filter(
-        (f) => typeof f === "string" && f.endsWith(".md"),
+        (f) =>
+          typeof f === "string" && (f.endsWith(".md") || f.endsWith(".toml")),
       ) as string[];
 
       for (const relPath of srcFiles) {
@@ -174,7 +199,7 @@ async function applyChanges(
   acceptedFiles: string[],
 ): Promise<void> {
   for (const asset of ASSET_PATHS) {
-    const srcBase = new URL(`../${asset.src}`, import.meta.url).pathname;
+    const srcBase = fileURLToPath(new URL(`../${asset.src}`, import.meta.url));
     const destBase = join(vaultPath, asset.dest);
 
     if (asset.type === "file") {

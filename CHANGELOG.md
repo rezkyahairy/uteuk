@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-29
+
+### Added
+- 72 per-step dot-notation slash commands across 6 agents (Claude, Qwen, Gemini, OpenCode, OpenClaw, Uteuk)
+- Agent-specific command configurations: `$ARGUMENTS`, `{{args}}`, `@{file}` injection, shell injection
+- `GEMINI.md` and `OPENCODE.md` agent config files installed by `uteuk init`
+- Shared `.uteuk/commands/` for agent-agnostic command definitions
+- `update.ts` now scans agent command directories for changes
+
+### Changed
+- Minimum Node.js requirement: 20 → 24
+- CI matrix: [20, 22] → [22, 24]
+- GitHub Actions: `actions/checkout@v4`, `actions/setup-node@v4` → `v5`
+
+### Removed
+- Single `/uteuk` command files (replaced by per-step commands)
+- `.qwen/skills/uteuk/SKILL.md` (superseded by per-step commands)
+
 ## [0.1.3] - 2026-04-17
 
 ### Added

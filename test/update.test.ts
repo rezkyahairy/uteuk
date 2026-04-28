@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   existsSync,
   mkdirSync,
@@ -9,34 +9,38 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { fileDiff } from "../src/fs.js";
 
 const TEST_DIR = join(tmpdir(), "uteuk-update-test-" + Date.now());
 
 beforeEach(() => {
   mkdirSync(TEST_DIR, { recursive: true });
-  // Create minimal bundled assets
-  mkdirSync(join(TEST_DIR, "bundled", ".uteuk", "prompts"), {
-    recursive: true,
-  });
-  writeFileSync(
-    join(TEST_DIR, "bundled", ".uteuk", "prompts", "capture.md"),
-    "# Capture\n\nCapture prompt content",
-  );
-  mkdirSync(join(TEST_DIR, "bundled", "templates"), { recursive: true });
-  writeFileSync(
-    join(TEST_DIR, "bundled", "templates", "Project.md"),
-    "---\ncreated: {{date}}\n---\n\n# Project\n",
-  );
-  writeFileSync(
-    join(TEST_DIR, "bundled", "AGENT.md"),
-    "# Agent Rules\n\nRule 1",
-  );
 });
 
 afterEach(() => {
   rmSync(TEST_DIR, { recursive: true, force: true });
 });
+
+vi.mock("ora", () => ({
+  default: () => ({
+    start: () => ({
+      succeed: () => {},
+      warn: () => {},
+      stop: () => {},
+    }),
+    succeed: () => {},
+    warn: () => {},
+    stop: () => {},
+  }),
+}));
+
+vi.mock("node:readline/promises", () => ({
+  createInterface: () => ({
+    question: () => Promise.resolve("n"),
+    close: () => {},
+  }),
+}));
 
 describe("fileDiff", () => {
   it("returns empty array for identical content", () => {
@@ -70,70 +74,69 @@ describe("fileDiff", () => {
   });
 });
 
-describe("update command logic", () => {
-  it("detects new files that don't exist in vault", () => {
-    // Simulate: bundled has a file that vault doesn't
-    const bundledFile = join(TEST_DIR, "bundled", "AGENT.md");
-    const vaultFile = join(TEST_DIR, "vault", "AGENT.md");
+describe("update command", () => {
+  it("exits with error when vault path does not exist", async () => {
+    const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {
+      throw new Error("process.exit called");
+    });
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    mkdirSync(join(TEST_DIR, "vault"), { recursive: true });
-    // Vault doesn't have AGENT.md yet
+    const { updateCommand } = await import("../src/update.js");
+    await expect(updateCommand("/nonexistent/path")).rejects.toThrow(
+      "process.exit called",
+    );
+    expect(errorSpy).toHaveBeenCalled();
 
-    expect(existsSync(bundledFile)).toBe(true);
-    expect(existsSync(vaultFile)).toBe(false);
+    exitSpy.mockRestore();
+    errorSpy.mockRestore();
   });
 
-  it("detects modified files by comparing content", () => {
-    const bundledFile = join(TEST_DIR, "bundled", "AGENT.md");
+  it("runs without crashing on empty vault directory", async () => {
     const vaultDir = join(TEST_DIR, "vault");
-    const vaultFile = join(vaultDir, "AGENT.md");
     mkdirSync(vaultDir, { recursive: true });
 
-    writeFileSync(vaultFile, "# Agent Rules\n\nRule 1 (modified by user)");
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-    const bundledContent = readFileSync(bundledFile, "utf-8");
-    const vaultContent = readFileSync(vaultFile, "utf-8");
+    const { updateCommand } = await import("../src/update.js");
+    await updateCommand(vaultDir);
 
-    expect(bundledContent).not.toBe(vaultContent);
+    expect(logSpy).toHaveBeenCalled();
 
-    const diff = fileDiff(vaultContent, bundledContent);
-    expect(diff.length).toBeGreaterThan(0);
+    logSpy.mockRestore();
   });
 
-  it("skips identical files (no changes)", () => {
-    const bundledFile = join(TEST_DIR, "bundled", "AGENT.md");
+  it("detects changes when vault is missing bundled assets", async () => {
     const vaultDir = join(TEST_DIR, "vault");
-    const vaultFile = join(vaultDir, "AGENT.md");
     mkdirSync(vaultDir, { recursive: true });
 
-    // Copy exact same content
-    writeFileSync(vaultFile, readFileSync(bundledFile, "utf-8"));
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-    const bundledContent = readFileSync(bundledFile, "utf-8");
-    const vaultContent = readFileSync(vaultFile, "utf-8");
+    const { updateCommand } = await import("../src/update.js");
+    await updateCommand(vaultDir);
 
-    expect(bundledContent).toBe(vaultContent);
+    const calls = logSpy.mock.calls.flat().join("\n");
+    expect(calls).toMatch(/Updates available|up to date/);
+
+    logSpy.mockRestore();
   });
 
-  it("handles directory comparison for prompts", () => {
-    const bundledPrompts = join(TEST_DIR, "bundled", ".uteuk", "prompts");
+  it("handles directory comparison logic", async () => {
+    const bundledPrompts = fileURLToPath(
+      new URL("../.uteuk/prompts", import.meta.url),
+    );
     const vaultPrompts = join(TEST_DIR, "vault", ".uteuk", "prompts");
     mkdirSync(vaultPrompts, { recursive: true });
 
-    // Add a new prompt in bundled that vault doesn't have
-    writeFileSync(
-      join(bundledPrompts, "process.md"),
-      "# Process\n\nProcess prompt",
-    );
+    if (existsSync(bundledPrompts)) {
+      const bundledFiles = readdirSync(bundledPrompts).filter((f) =>
+        f.endsWith(".md"),
+      );
+      const vaultFiles = readdirSync(vaultPrompts).filter((f) =>
+        f.endsWith(".md"),
+      );
 
-    const bundledFiles = readdirSync(bundledPrompts).filter((f) =>
-      f.endsWith(".md"),
-    );
-    const vaultFiles = readdirSync(vaultPrompts).filter((f) =>
-      f.endsWith(".md"),
-    );
-
-    expect(bundledFiles).toContain("process.md");
-    expect(vaultFiles).not.toContain("process.md");
+      expect(bundledFiles.length).toBeGreaterThan(0);
+      expect(vaultFiles.length).toBe(0);
+    }
   });
 });

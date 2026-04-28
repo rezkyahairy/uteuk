@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   existsSync,
   mkdirSync,
@@ -10,7 +10,8 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { newCommand } from "../src/new.js";
-import { listTemplates } from "../src/templates.js";
+import { listTemplates, printTemplates } from "../src/templates.js";
+import type { TemplateInfo } from "../src/types.js";
 
 const TEST_DIR = join(tmpdir(), "uteuk-new-test-" + Date.now());
 
@@ -101,6 +102,71 @@ describe("new command", () => {
     expect(content).toContain("created:");
     expect(content).not.toContain("{{date}}");
   });
+
+  it("exits when no templates directory exists", async () => {
+    const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {
+      throw new Error("process.exit called");
+    });
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const emptyDir = join(TEST_DIR, "empty");
+    mkdirSync(emptyDir, { recursive: true });
+
+    await expect(newCommand("project", "Test", emptyDir)).rejects.toThrow(
+      "process.exit called",
+    );
+    expect(errorSpy).toHaveBeenCalled();
+
+    exitSpy.mockRestore();
+    errorSpy.mockRestore();
+  });
+
+  it("exits when template file is missing for note type", async () => {
+    const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => {
+      throw new Error("process.exit called");
+    });
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const tplDir = join(TEST_DIR, "05-Templates");
+    rmSync(join(tplDir, "Task.md"));
+
+    await expect(newCommand("task", "Test", TEST_DIR)).rejects.toThrow(
+      "process.exit called",
+    );
+    expect(errorSpy).toHaveBeenCalled();
+
+    exitSpy.mockRestore();
+    errorSpy.mockRestore();
+  });
+
+  it("falls back to case-insensitive template matching", async () => {
+    const tplDir = join(TEST_DIR, "05-Templates");
+    rmSync(join(tplDir, "Project.md"));
+    writeFileSync(
+      join(tplDir, "PROJECT.md"),
+      "---\ncreated: {{date}}\n---\n\n# Project\n",
+    );
+
+    await newCommand("project", "Case Test", TEST_DIR);
+
+    const filePath = join(TEST_DIR, "01-Projects", "Case Test.md");
+    expect(existsSync(filePath)).toBe(true);
+  });
+
+  it("creates default note names for all types", async () => {
+    await newCommand("project", undefined, TEST_DIR);
+    await newCommand("resource", undefined, TEST_DIR);
+    await newCommand("moc", undefined, TEST_DIR);
+    await newCommand("task", undefined, TEST_DIR);
+
+    const projectFiles = readdirSync(join(TEST_DIR, "01-Projects"));
+    const resourceFiles = readdirSync(join(TEST_DIR, "03-Resources"));
+    const inboxFiles = readdirSync(join(TEST_DIR, "00-Inbox"));
+
+    expect(projectFiles[0]).toMatch(/^project-\d{4}-\d{2}-\d{2}\.md$/);
+    expect(resourceFiles.length).toBe(2);
+    expect(inboxFiles[0]).toMatch(/^task-\d{4}-\d{2}-\d{2}\.md$/);
+  });
 });
 
 describe("templates command", () => {
@@ -127,5 +193,56 @@ describe("templates command", () => {
     const templates = listTemplates(TEST_DIR);
     const project = templates.find((t) => t.name === "Project");
     expect(project).toBeDefined();
+  });
+
+  it("extracts description from first non-empty line when no heading", () => {
+    const tplDir = join(TEST_DIR, "05-Templates");
+    writeFileSync(
+      join(tplDir, "NoHeading.md"),
+      "---\ncreated: {{date}}\n---\n\nJust some text without a heading\n\nMore text\n",
+    );
+
+    const templates = listTemplates(TEST_DIR);
+    const noHeading = templates.find((t) => t.name === "NoHeading");
+    expect(noHeading).toBeDefined();
+    expect(noHeading!.description).toContain("Just some text");
+  });
+
+  it("handles template with only frontmatter (no description)", () => {
+    const tplDir = join(TEST_DIR, "05-Templates");
+    writeFileSync(join(tplDir, "Empty.md"), "---\ncreated: {{date}}\n---\n");
+
+    const templates = listTemplates(TEST_DIR);
+    const empty = templates.find((t) => t.name === "Empty");
+    expect(empty).toBeDefined();
+    expect(empty!.description).toBe("");
+  });
+});
+
+describe("printTemplates", () => {
+  it("prints templates with formatted output", () => {
+    const templates: TemplateInfo[] = [
+      { name: "Project", description: "Project template", file: "Project.md" },
+      { name: "Daily Note", description: "Daily note", file: "Daily Note.md" },
+    ];
+
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    printTemplates(templates);
+
+    const calls = logSpy.mock.calls.flat().join("\n");
+    expect(calls).toContain("Available templates");
+    expect(calls).toContain("Project");
+    expect(calls).toContain("Daily Note");
+
+    logSpy.mockRestore();
+  });
+
+  it("does nothing for empty template list", () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    printTemplates([]);
+
+    expect(logSpy).not.toHaveBeenCalled();
+
+    logSpy.mockRestore();
   });
 });
