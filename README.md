@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/uteuk"><img src="https://img.shields.io/npm/v/uteuk?style=flat-square&logo=npm" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/uteuk"><img src="https://img.shields.io/npm/dm/uteuk?style=flat-square&logo=npm" alt="npm downloads"></a>
-  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/node-%3E%3D20-0E4A1E?style=flat-square&logo=node.js" alt="Node.js"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/node-%3E%3D24-0E4A1E?style=flat-square&logo=node.js" alt="Node.js"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-0E4A1E?style=flat-square" alt="License"></a>
   <a href="https://github.com/rezkyahairy/uteuk/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/rezkyahairy/uteuk/ci.yml?style=flat-square&logo=github-actions" alt="CI"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"></a>
