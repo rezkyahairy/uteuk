@@ -1,6 +1,8 @@
 description = "Convert draft to Ghost-ready blog post"
 prompt = """
-Read and follow the instructions in `.uteuk/prompts/publish.md`.
+Execute uteuk step: {{args}}
+
+Full instructions: @{.uteuk/prompts/publish.md}
 
 Hard rules (from AGENT.md):
 1. NEVER delete or move files without approval

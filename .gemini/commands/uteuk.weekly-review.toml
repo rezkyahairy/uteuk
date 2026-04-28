@@ -1,6 +1,8 @@
 description = "Full weekly audit"
 prompt = """
-Read and follow the instructions in `.uteuk/prompts/weekly-review.md`.
+Execute uteuk step: {{args}}
+
+Full instructions: @{.uteuk/prompts/weekly-review.md}
 
 Hard rules (from AGENT.md):
 1. NEVER delete or move files without approval

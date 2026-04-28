@@ -1,6 +1,8 @@
 description = "Update today's daily note"
 prompt = """
-Read and follow the instructions in `.uteuk/prompts/daily.md`.
+Execute uteuk step: {{args}}
+
+Full instructions: @{.uteuk/prompts/daily.md}
 
 Hard rules (from AGENT.md):
 1. NEVER delete or move files without approval

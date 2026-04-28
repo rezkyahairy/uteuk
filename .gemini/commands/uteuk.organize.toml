@@ -1,6 +1,8 @@
 description = "Organize a specific note"
 prompt = """
-Read and follow the instructions in `.uteuk/prompts/organize.md`.
+Execute uteuk step: {{args}}
+
+Full instructions: @{.uteuk/prompts/organize.md}
 
 Hard rules (from AGENT.md):
 1. NEVER delete or move files without approval

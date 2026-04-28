@@ -1,6 +1,8 @@
 description = "Process Inbox into PARA structure"
 prompt = """
-Read and follow the instructions in `.uteuk/prompts/process.md`.
+Execute uteuk step: {{args}}
+
+Full instructions: @{.uteuk/prompts/process.md}
 
 Hard rules (from AGENT.md):
 1. NEVER delete or move files without approval
