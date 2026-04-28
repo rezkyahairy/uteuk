@@ -1,7 +1,12 @@
 ---
 description: Capture raw idea into Inbox
+argument-hint: [idea]
+disable-model-invocation: true
+allowed-tools: Read Write Bash(git *) Bash(.uteuk/skills/date-helper/get-date.sh)
 ---
 You are executing the uteuk (AI-Assisted Note-Taking) pipeline for an Obsidian Second Brain vault.
+
+User input: $ARGUMENTS
 
 Read and follow the instructions in `.uteuk/prompts/capture.md`.
 
@@ -15,5 +20,5 @@ Hard rules (from AGENT.md):
 Agent-specific config: See CLAUDE.md for processed tags and output format.
 
 For date validation before creating any note:
-- Run: bash .uteuk/skills/date-helper/get-date.sh
+- Run: !`bash .uteuk/skills/date-helper/get-date.sh`
 - Read: .uteuk/skills/date-helper/DATE_CHECK.md
