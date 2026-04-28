@@ -179,11 +179,11 @@ describe("init command — slash commands", () => {
     await initCommand(TEST_DIR, { existing: true });
 
     const expectedCommands = [
-      ".claude/commands/uteuk.md",
-      ".qwen/commands/uteuk.md",
-      ".gemini/commands/uteuk.toml",
-      ".opencode/commands/uteuk.md",
-      ".openclaw/commands/uteuk.md",
+      ".claude/commands/uteuk.capture.md",
+      ".qwen/commands/uteuk.capture.md",
+      ".gemini/commands/uteuk.capture.toml",
+      ".opencode/commands/uteuk.capture.md",
+      ".openclaw/commands/uteuk.capture.md",
     ];
     for (const cmd of expectedCommands) {
       expect(existsSync(join(TEST_DIR, cmd))).toBe(true);
@@ -194,11 +194,11 @@ describe("init command — slash commands", () => {
     await initCommand(TEST_DIR, { fromScratch: true });
 
     const expectedCommands = [
-      ".claude/commands/uteuk.md",
-      ".qwen/commands/uteuk.md",
-      ".gemini/commands/uteuk.toml",
-      ".opencode/commands/uteuk.md",
-      ".openclaw/commands/uteuk.md",
+      ".claude/commands/uteuk.capture.md",
+      ".qwen/commands/uteuk.capture.md",
+      ".gemini/commands/uteuk.capture.toml",
+      ".opencode/commands/uteuk.capture.md",
+      ".openclaw/commands/uteuk.capture.md",
     ];
     for (const cmd of expectedCommands) {
       expect(existsSync(join(TEST_DIR, cmd))).toBe(true);
@@ -210,12 +210,12 @@ describe("init command — slash commands", () => {
 
     const existingContent = "# My custom uteuk command\n";
     mkdirSync(join(TEST_DIR, ".claude", "commands"), { recursive: true });
-    writeFileSync(join(TEST_DIR, ".claude/commands/uteuk.md"), existingContent);
+    writeFileSync(join(TEST_DIR, ".claude/commands/uteuk.capture.md"), existingContent);
 
     await initCommand(TEST_DIR, { existing: true });
 
     expect(
-      readFileSync(join(TEST_DIR, ".claude/commands/uteuk.md"), "utf-8"),
+      readFileSync(join(TEST_DIR, ".claude/commands/uteuk.capture.md"), "utf-8"),
     ).toBe(existingContent);
   });
 });
