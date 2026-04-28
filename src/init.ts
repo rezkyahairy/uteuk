@@ -145,7 +145,12 @@ async function initExisting(vaultPath: string): Promise<void> {
   for (const dir of SLASH_COMMAND_DIRS) {
     if (existsSync(join(vaultPath, dir))) {
       const agentName = dir.split("/")[0].replace(".", "");
-      console.log(`  ${chalk.cyan(dir + "/")} — ${agentName} slash commands`);
+      const fileCount = readdirSync(join(vaultPath, dir)).filter(
+        (f) => f.startsWith("uteuk.") && !f.endsWith(".md.bak"),
+      ).length;
+      console.log(
+        `  ${chalk.cyan(dir + "/")} — ${agentName} slash commands (${fileCount} files)`,
+      );
     }
   }
   for (const config of AGENT_CONFIGS) {
