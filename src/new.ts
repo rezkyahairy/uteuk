@@ -3,6 +3,12 @@ import { join } from "node:path";
 import chalk from "chalk";
 import type { NoteType } from "./types.js";
 import { resolveVaultPath } from "./vault.js";
+import {
+  getActiveAgentProfile,
+  isAgentInstalled,
+  invokeAgent,
+  loadPromptTemplate,
+} from "./agent.js";
 
 const { existsSync, ensureDirSync, writeFileSync, readFileSync, readdirSync } =
   fs;
@@ -61,6 +67,37 @@ export async function newCommand(
   const filePath = join(targetDir, fileName);
   writeFileSync(filePath, content, "utf-8");
   console.log(chalk.green(`✓ ${noteType} note created: ${filePath}`));
+
+  // AI enhancement for daily notes
+  if (noteType === "daily") {
+    const agentProfile = getActiveAgentProfile(resolvedPath);
+    if (agentProfile && isAgentInstalled(agentProfile)) {
+      console.log(
+        chalk.dim(
+          `\nInvoking ${agentProfile.name} to prepare your daily note...`,
+        ),
+      );
+      try {
+        const prompt = await loadPromptTemplate(resolvedPath, "daily");
+        const context = `Today's date is ${dateStr}. The daily note has been created at ${filePath}. Please populate it with agenda suggestions, follow-ups from recent notes, and any recurring tasks.`;
+        await invokeAgent(
+          agentProfile,
+          `${prompt}\n\n${context}`,
+          resolvedPath,
+        );
+      } catch {
+        console.log(
+          chalk.dim("\nAgent finished. Daily note ready at: " + filePath),
+        );
+      }
+    } else if (agentProfile && !isAgentInstalled(agentProfile)) {
+      console.error(
+        chalk.dim(
+          `\nAgent "${agentProfile.name}" not installed, using template only. Install: ${agentProfile.installInstructions}`,
+        ),
+      );
+    }
+  }
 }
 
 function getTemplateFile(

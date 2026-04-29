@@ -13,51 +13,9 @@ import type {
   VerificationCheck,
 } from "./types.js";
 import { hasGitRepo, hasGitRemote, resolveVaultPath } from "./vault.js";
+import { AGENT_HEADLESS_PROFILES } from "./agent.js";
 
-export const AGENT_PROFILES: AiAgentProfile[] = [
-  {
-    id: "claude",
-    name: "Claude Code",
-    binary: "claude",
-    authInstructions:
-      "Get an API key at https://console.anthropic.com/settings/keys",
-    authUrl: "https://console.anthropic.com/settings/keys",
-    keyStoragePath: "~/.config/anthropic/credentials.json",
-  },
-  {
-    id: "qwen",
-    name: "Qwen Code",
-    binary: "qwen",
-    authInstructions:
-      "Get an API key at https://dashscope.console.aliyun.com/apiKey",
-    authUrl: "https://dashscope.console.aliyun.com/apiKey",
-    keyStoragePath: "~/.dashscope/config",
-  },
-  {
-    id: "gemini",
-    name: "Gemini CLI",
-    binary: "gemini",
-    authInstructions: "Get an API key at https://aistudio.google.com/apikey",
-    authUrl: "https://aistudio.google.com/apikey",
-    keyStoragePath: "~/.config/glm/config.json",
-  },
-  {
-    id: "opencode",
-    name: "OpenCode",
-    binary: "opencode",
-    authInstructions: "Configure your provider in the OpenCode config file.",
-    authUrl: "",
-    keyStoragePath: "~/.config/opencode/config.json",
-  },
-  {
-    id: "openclaw",
-    name: "OpenClaw",
-    binary: "openclaw",
-    authInstructions: "Configure your provider in the OpenClaw config file.",
-    authUrl: "",
-    keyStoragePath: "~/.config/openclaw/config.json",
-  },
-];
+export const AGENT_PROFILES = Object.values(AGENT_HEADLESS_PROFILES);
 
 const CONFIG_FILE = "config.json";
 
