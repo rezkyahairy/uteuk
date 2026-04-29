@@ -34,3 +34,44 @@ export interface TemplateInfo {
   description: string;
   file: string;
 }
+
+export interface DoctorCheck {
+  name: string;
+  passed: boolean;
+  message: string;
+  fix?: string;
+}
+
+export interface DoctorResult {
+  checks: DoctorCheck[];
+  passed: boolean;
+}
+
+export interface AiAgentProfile {
+  id: string;
+  name: string;
+  binary: string;
+  authInstructions: string;
+  authUrl: string;
+  keyStoragePath: string;
+}
+
+export interface AgentConfigEntry {
+  keyStored: boolean;
+  keyPath: string;
+}
+
+export interface OnboardingConfig {
+  configVersion: number;
+  activeAgent?: string;
+  agentConfigs: Record<string, AgentConfigEntry>;
+  onboardingComplete: boolean;
+  completedAt?: string;
+}
+
+export interface VerificationCheck {
+  name: string;
+  passed: boolean;
+  message: string;
+  fix?: string;
+}

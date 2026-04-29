@@ -260,4 +260,20 @@ describe("init command — edge cases", () => {
     expect(existsSync(nestedPath)).toBe(true);
     expect(existsSync(join(nestedPath, "00-Inbox"))).toBe(true);
   });
+
+  it(".gitignore created in from-scratch mode", async () => {
+    await initCommand(TEST_DIR, { fromScratch: true });
+
+    const gitignorePath = join(TEST_DIR, ".gitignore");
+    expect(existsSync(gitignorePath)).toBe(true);
+  });
+
+  it(".gitignore content excludes workspace/OS files", async () => {
+    await initCommand(TEST_DIR, { fromScratch: true });
+
+    const gitignorePath = join(TEST_DIR, ".gitignore");
+    const content = readFileSync(gitignorePath, "utf-8");
+    expect(content).toContain(".obsidian/workspace");
+    expect(content).toContain(".DS_Store");
+  });
 });

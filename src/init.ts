@@ -238,6 +238,13 @@ async function initFromScratch(
     }
   }
 
+  // 7b. Copy .gitignore
+  const srcGitignore = getBundledPath("templates/.gitignore");
+  const destGitignore = join(vaultPath, ".gitignore");
+  if (existsSync(srcGitignore) && !existsSync(destGitignore)) {
+    copySync(srcGitignore, destGitignore, { overwrite: false });
+  }
+
   // 8. Create welcome note
   const welcomePath = join(vaultPath, "00-Inbox", "Welcome to Uteuk.md");
   if (!existsSync(welcomePath)) {
@@ -285,7 +292,14 @@ Happy note-taking!
 
 export async function initCommand(
   vaultPath: string | undefined,
-  options: { existing?: boolean; fromScratch?: boolean; force?: boolean },
+  options: {
+    existing?: boolean;
+    fromScratch?: boolean;
+    force?: boolean;
+    nonInteractive?: boolean;
+    skipGit?: boolean;
+    skipAi?: boolean;
+  } = {},
 ): Promise<void> {
   const resolvedPath = resolveVaultPath(vaultPath);
 
@@ -306,9 +320,23 @@ export async function initCommand(
 
   const mode = selectMode(state, !!options.fromScratch);
 
-  if (mode === "from-scratch") {
-    await initFromScratch(resolvedPath, !!options.force);
+  // Default to non-interactive when called programmatically (tests, scripts)
+  const interactive = options.nonInteractive === false && process.stdin.isTTY;
+
+  if (!interactive || options.nonInteractive === true) {
+    // Non-interactive mode: use the old init paths silently
+    if (mode === "from-scratch") {
+      await initFromScratch(resolvedPath, !!options.force);
+    } else {
+      await initExisting(resolvedPath);
+    }
   } else {
-    await initExisting(resolvedPath);
+    // Interactive wizard
+    const { runWizard } = await import("./wizard.js");
+    await runWizard(resolvedPath, mode, {
+      nonInteractive: false,
+      skipGit: !!options.skipGit,
+      skipAi: !!options.skipAi,
+    });
   }
 }

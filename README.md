@@ -63,7 +63,10 @@ Open your vault in your preferred AI coding assistant. The installed configs tel
 
 | Command | Description |
 |---------|-------------|
-| `uteuk init [vault]` | Install Uteuk into an existing or new vault |
+| `uteuk init [vault]` | Install Uteuk with interactive setup wizard |
+| `uteuk doctor [vault]` | Check system prerequisites (Node.js, git, vault path) |
+| `uteuk setup ai` | Configure AI agent settings and API keys |
+| `uteuk setup verify` | Verify vault setup is complete |
 | `uteuk capture "idea"` | Create a timestamped note in `00-Inbox/` |
 | `uteuk new <type> [title]` | Create a note from template (project, daily, resource, moc, task, inbox) |
 | `uteuk templates` | List available note templates |
@@ -78,6 +81,9 @@ Open your vault in your preferred AI coding assistant. The installed configs tel
 | `-h, --help` | Show help |
 | `--vault <path>` | Set vault path globally (overridden by local `--vault`) |
 | `--json` | Machine-parseable JSON output (`status` and `templates` commands) |
+| `--non-interactive` | Run `uteuk init` without prompts (CI/automation) |
+| `--skip-git` | Skip git remote configuration during init |
+| `--skip-ai` | Skip AI agent setup during init |
 
 ### Examples
 
