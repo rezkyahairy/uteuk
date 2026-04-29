@@ -54,6 +54,10 @@ export interface AiAgentProfile {
   authInstructions: string;
   authUrl: string;
   keyStoragePath: string;
+  headlessFlag: string;
+  autoApproveFlag?: string;
+  quietFlag?: string;
+  installInstructions: string;
 }
 
 export interface AgentConfigEntry {

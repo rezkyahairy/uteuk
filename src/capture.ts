@@ -2,6 +2,12 @@ import fs from "fs-extra";
 import { join } from "node:path";
 import chalk from "chalk";
 import { resolveVaultPath } from "./vault.js";
+import {
+  getActiveAgentProfile,
+  isAgentInstalled,
+  invokeAgent,
+  loadPromptTemplate,
+} from "./agent.js";
 
 const { ensureDirSync, existsSync, writeFileSync } = fs;
 
@@ -42,7 +48,25 @@ tags: [fleeting]
 
   writeFileSync(filePath, content, "utf-8");
   console.log(chalk.green(`✓ Note created: ${filePath}`));
-  console.log(
-    `\n${chalk.dim("Next: Ask your AI agent to process this note.")}`,
-  );
+
+  // AI enhancement: invoke agent with capture prompt
+  const agentProfile = getActiveAgentProfile(resolvedPath);
+  if (agentProfile && isAgentInstalled(agentProfile)) {
+    console.log(
+      chalk.dim(`\nInvoking ${agentProfile.name} to expand this note...`),
+    );
+    try {
+      const prompt = await loadPromptTemplate(resolvedPath, "capture");
+      const context = `I just captured this idea: "${noteText}". It was saved to ${fileName}. Please expand this note with context, suggest tags, and link to any related notes in the vault.`;
+      await invokeAgent(agentProfile, `${prompt}\n\n${context}`, resolvedPath);
+    } catch {
+      console.log(chalk.dim("\nAgent finished. Note created at: " + filePath));
+    }
+  } else if (agentProfile && !isAgentInstalled(agentProfile)) {
+    console.error(
+      chalk.dim(
+        `\nAgent "${agentProfile.name}" not installed, using raw capture. Install: ${agentProfile.installInstructions}`,
+      ),
+    );
+  }
 }

@@ -10,6 +10,10 @@ import {
 } from "./templates.js";
 import { statusCommand, printStatusJson } from "./status.js";
 import { updateCommand } from "./update.js";
+import { processCommand } from "./process.js";
+import { connectCommand } from "./connect.js";
+import { mocCommand } from "./moc.js";
+import { weeklyReviewCommand } from "./weekly-review.js";
 import { runPreflight, printDoctorOutput } from "./doctor.js";
 import {
   runVerification,
@@ -129,6 +133,58 @@ program
   .addHelpText(
     "after",
     `\nExamples:\n  uteuk update\n  uteuk update --vault ~/vault`,
+  );
+
+// ─── process ────────────────────────────────────────────────
+program
+  .command("process")
+  .description("Process inbox notes with AI")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .action((opts) => {
+    processCommand(resolveVault(opts, program));
+  })
+  .addHelpText(
+    "after",
+    `\nExamples:\n  uteuk process\n  uteuk process --vault ~/vault`,
+  );
+
+// ─── connect ────────────────────────────────────────────────
+program
+  .command("connect <noteA> <noteB>")
+  .description("Find connections between two notes")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .action((noteA, noteB, opts) => {
+    connectCommand(resolveVault(opts, program), noteA, noteB);
+  })
+  .addHelpText(
+    "after",
+    `\nExamples:\n  uteuk connect "[[Note A]]" "[[Note B]]"\n  uteuk connect "Learning" "AI Ethics"`,
+  );
+
+// ─── moc ────────────────────────────────────────────────────
+program
+  .command("moc <topic>")
+  .description("Build a Map of Content for a topic")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .action((topic, opts) => {
+    mocCommand(resolveVault(opts, program), topic);
+  })
+  .addHelpText(
+    "after",
+    `\nExamples:\n  uteuk moc "Learning"\n  uteuk moc "TypeScript Patterns" --vault ~/vault`,
+  );
+
+// ─── weekly-review ──────────────────────────────────────────
+program
+  .command("weekly-review")
+  .description("Run a comprehensive weekly vault review")
+  .option("--vault <path>", "Path to vault (defaults to current directory)")
+  .action((opts) => {
+    weeklyReviewCommand(resolveVault(opts, program));
+  })
+  .addHelpText(
+    "after",
+    `\nExamples:\n  uteuk weekly-review\n  uteuk weekly-review --vault ~/vault`,
   );
 
 // ─── doctor ─────────────────────────────────────────────────
@@ -346,6 +402,10 @@ program.on("command:*", () => {
     "templates",
     "status",
     "update",
+    "process",
+    "connect",
+    "moc",
+    "weekly-review",
     "doctor",
     "setup",
   ];

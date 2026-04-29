@@ -35,6 +35,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--non-interactive`, `--skip-git`, `--skip-ai` flags on `uteuk init`
 - 6 AI agent profiles with auth guidance (Claude, Qwen, Gemini, OpenCode, OpenClaw)
 
+## [Unreleased] — AI Headless Integration
+
+### Added
+- `uteuk process` — process inbox notes with AI
+- `uteuk connect "[[A]]" "[[B]]"` — find connections between two notes
+- `uteuk moc "<topic>"` — build Maps of Content
+- `uteuk weekly-review` — comprehensive vault review
+- `src/agent.ts` — agent profiles, headless invocation, binary validation
+- AI-enhanced `uteuk capture` — expands notes after creation
+- AI-enhanced `uteuk daily` — pre-populates daily notes
+- Graceful fallback to non-AI behavior when agent unavailable
+
 ## [0.2.0] - 2026-04-29
 
 ### Added
