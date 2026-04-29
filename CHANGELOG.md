@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `-v` short alias for `--version` flag
+- Usage examples in help text for all subcommands (`init`, `capture`, `new`, `templates`, `status`, `update`)
+- Global `--vault <path>` option on root program — local `--vault` takes precedence
+- Invalid command error handling lists available commands
+- `--json` flag on `status` and `templates` commands for machine-parseable output
+- `printStatusJson()` and `printTemplatesJson()` helper functions
+- `scanVault()` exported from `status.ts` for programmatic use
+
+### Changed
+- `listTemplates()` returns `[]` silently when no templates dir exists (message moved to `printTemplates()`)
+
+### Added
+- Inbox template — structured fleeting note with frontmatter (`tags: [fleeting]`, `status: unprocessed`)
+- `uteuk new inbox [title]` command to create structured inbox notes
+
 ## [0.2.0] - 2026-04-29
 
 ### Added

@@ -210,12 +210,18 @@ describe("init command — slash commands", () => {
 
     const existingContent = "# My custom uteuk command\n";
     mkdirSync(join(TEST_DIR, ".claude", "commands"), { recursive: true });
-    writeFileSync(join(TEST_DIR, ".claude/commands/uteuk.capture.md"), existingContent);
+    writeFileSync(
+      join(TEST_DIR, ".claude/commands/uteuk.capture.md"),
+      existingContent,
+    );
 
     await initCommand(TEST_DIR, { existing: true });
 
     expect(
-      readFileSync(join(TEST_DIR, ".claude/commands/uteuk.capture.md"), "utf-8"),
+      readFileSync(
+        join(TEST_DIR, ".claude/commands/uteuk.capture.md"),
+        "utf-8",
+      ),
     ).toBe(existingContent);
   });
 });

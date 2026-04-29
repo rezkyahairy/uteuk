@@ -11,9 +11,6 @@ export function listTemplates(vaultPath: string | undefined): TemplateInfo[] {
   const templatesDir = join(resolvedPath, "05-Templates");
 
   if (!existsSync(templatesDir)) {
-    console.log(
-      chalk.yellow("No templates found. Run `uteuk init` to install them."),
-    );
     return [];
   }
 
@@ -21,7 +18,6 @@ export function listTemplates(vaultPath: string | undefined): TemplateInfo[] {
 
   return files.map((file) => {
     const name = file.replace(".md", "");
-    // Try to extract description from frontmatter or first heading
     const content = readFileSync(join(templatesDir, file), "utf-8");
     const description = extractDescription(content);
     return { name, description, file };
@@ -40,7 +36,12 @@ function extractDescription(content: string): string {
 }
 
 export function printTemplates(templates: TemplateInfo[]): void {
-  if (templates.length === 0) return;
+  if (templates.length === 0) {
+    console.log(
+      chalk.yellow("No templates found. Run `uteuk init` to install them."),
+    );
+    return;
+  }
 
   console.log(chalk.bold("\nAvailable templates:\n"));
   for (const t of templates) {
@@ -49,4 +50,8 @@ export function printTemplates(templates: TemplateInfo[]): void {
     );
   }
   console.log();
+}
+
+export function printTemplatesJson(templates: TemplateInfo[]): void {
+  console.log(JSON.stringify(templates, null, 2));
 }
