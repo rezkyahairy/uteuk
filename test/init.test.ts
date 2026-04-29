@@ -210,12 +210,18 @@ describe("init command — slash commands", () => {
 
     const existingContent = "# My custom uteuk command\n";
     mkdirSync(join(TEST_DIR, ".claude", "commands"), { recursive: true });
-    writeFileSync(join(TEST_DIR, ".claude/commands/uteuk.capture.md"), existingContent);
+    writeFileSync(
+      join(TEST_DIR, ".claude/commands/uteuk.capture.md"),
+      existingContent,
+    );
 
     await initCommand(TEST_DIR, { existing: true });
 
     expect(
-      readFileSync(join(TEST_DIR, ".claude/commands/uteuk.capture.md"), "utf-8"),
+      readFileSync(
+        join(TEST_DIR, ".claude/commands/uteuk.capture.md"),
+        "utf-8",
+      ),
     ).toBe(existingContent);
   });
 });
@@ -253,5 +259,21 @@ describe("init command — edge cases", () => {
 
     expect(existsSync(nestedPath)).toBe(true);
     expect(existsSync(join(nestedPath, "00-Inbox"))).toBe(true);
+  });
+
+  it(".gitignore created in from-scratch mode", async () => {
+    await initCommand(TEST_DIR, { fromScratch: true });
+
+    const gitignorePath = join(TEST_DIR, ".gitignore");
+    expect(existsSync(gitignorePath)).toBe(true);
+  });
+
+  it(".gitignore content excludes workspace/OS files", async () => {
+    await initCommand(TEST_DIR, { fromScratch: true });
+
+    const gitignorePath = join(TEST_DIR, ".gitignore");
+    const content = readFileSync(gitignorePath, "utf-8");
+    expect(content).toContain(".obsidian/workspace");
+    expect(content).toContain(".DS_Store");
   });
 });

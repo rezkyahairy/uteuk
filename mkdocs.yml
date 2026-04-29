@@ -1,0 +1,82 @@
+site_name: Uteuk
+site_description: AI-assisted Second Brain CLI for Obsidian vaults
+site_url: https://rezkyahairy.github.io/uteuk
+site_author: Rezkya Hairy
+repo_name: rezkyahairy/uteuk
+repo_url: https://github.com/rezkyahairy/uteuk
+edit_uri: edit/main/uteuk/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.expand
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+  logo: logo.png
+  favicon: logo.png
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - tables
+  - admonition
+  - pymdownx.details
+
+nav:
+  - Home: index.md
+  - CLI:
+    - Commands: cli/commands.md
+    - Options: cli/options.md
+  - AI Integration:
+    - Overview: ai/overview.md
+    - Agents Setup: ai/agents.md
+    - AI Commands: ai/headless.md
+  - Slash Commands:
+    - Overview: slash-commands/overview.md
+    - Claude Code: slash-commands/claude.md
+    - Qwen Code: slash-commands/qwen.md
+    - Gemini CLI: slash-commands/gemini.md
+    - OpenCode: slash-commands/opencode.md
+    - OpenClaw: slash-commands/openclaw.md
+  - Vault:
+    - Structure: vault/structure.md
+    - Templates: vault/templates.md
+    - Prompts: vault/prompts.md
+  - Workflows:
+    - Daily Notes: workflows/daily.md
+    - Weekly Review: workflows/weekly-review.md
+    - Projects: workflows/projects.md
+    - Sync: workflows/sync.md
+  - Onboarding: onboarding.md
+  - Troubleshooting: troubleshooting.md
