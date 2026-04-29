@@ -11,6 +11,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-0E4A1E?style=flat-square" alt="License"></a>
   <a href="https://github.com/rezkyahairy/uteuk/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/rezkyahairy/uteuk/ci.yml?style=flat-square&logo=github-actions" alt="CI"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"></a>
+  <a href="https://rezkyahairy.github.io/uteuk"><img src="https://img.shields.io/badge/docs-rezkyahairy.github.io/uteuk-0E4A1E?style=flat-square&logo=github" alt="Docs"></a>
 </p>
 
 > **Uteuk** *(Basa Sunda: Brain)* — An AI-assisted Second Brain for Obsidian. Install pipeline prompts, note templates, and agent configs into any vault with one command.
@@ -118,7 +119,7 @@ Uteuk implements a 4-phase AI-assisted note-taking pipeline:
 
 ```
 ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│ CAPTURE  │ → │ PROCESS  │ → │ ORGANIZE │ → │ EXPRESS  │
+│ CAPTURE  │ →  │ PROCESS  │ →  │ ORGANIZE │ →  │ EXPRESS  │
 │  (You)   │    │  (AI)    │    │ (You+AI) │    │ (You+AI) │
 └──────────┘    └──────────┘    └──────────┘    └──────────┘
 ```
@@ -238,6 +239,12 @@ npm run lint
 ### Feature Development
 
 This project uses spec-kit (`/spec → /plan → /tasks → /implement`). See `CONTRIBUTING.md` for details.
+
+## Documentation
+
+Full documentation with CLI reference, AI agent guides, slash commands, workflows, and troubleshooting:
+
+📖 **[rezkyahairy.github.io/uteuk](https://rezkyahairy.github.io/uteuk)**
 
 ## License
 
