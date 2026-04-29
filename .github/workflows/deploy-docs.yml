@@ -26,12 +26,11 @@ jobs:
       - name: Install MkDocs
         run: pip install mkdocs-material
       - name: Build docs
-        working-directory: uteuk
         run: mkdocs build --strict
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: uteuk/site
+          path: site
 
   deploy:
     needs: build
