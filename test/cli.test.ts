@@ -173,4 +173,43 @@ describe("CLI Options", () => {
       expect(templatesJson).not.toMatch(ansiRegex);
     });
   });
+
+  // ─── Onboarding commands ──────────────────────────────────────
+  describe("onboarding commands", () => {
+    it("uteuk doctor -h shows help", async () => {
+      const { stdout } = await execFileAsync("node", [CLI_BIN, "doctor", "-h"]);
+      expect(stdout).toContain("prerequisites");
+    });
+
+    it("uteuk setup verify -h shows help", async () => {
+      const { stdout } = await execFileAsync("node", [
+        CLI_BIN,
+        "setup",
+        "verify",
+        "-h",
+      ]);
+      expect(stdout).toContain("Verify vault setup");
+    });
+
+    it("uteuk setup ai -h shows help", async () => {
+      const { stdout } = await execFileAsync("node", [
+        CLI_BIN,
+        "setup",
+        "ai",
+        "-h",
+      ]);
+      expect(stdout).toContain("AI agent");
+    });
+
+    it("uteuk init --non-interactive accepted as flag", async () => {
+      const { stdout } = await execFileAsync("node", [
+        CLI_BIN,
+        "init",
+        "--help",
+      ]);
+      expect(stdout).toContain("--non-interactive");
+      expect(stdout).toContain("--skip-git");
+      expect(stdout).toContain("--skip-ai");
+    });
+  });
 });
