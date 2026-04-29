@@ -7,45 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- `-v` short alias for `--version` flag
-- Usage examples in help text for all subcommands (`init`, `capture`, `new`, `templates`, `status`, `update`)
-- Global `--vault <path>` option on root program — local `--vault` takes precedence
-- Invalid command error handling lists available commands
-- `--json` flag on `status` and `templates` commands for machine-parseable output
-- `printStatusJson()` and `printTemplatesJson()` helper functions
-- `scanVault()` exported from `status.ts` for programmatic use
-
-### Changed
-- `listTemplates()` returns `[]` silently when no templates dir exists (message moved to `printTemplates()`)
+## [0.3.0] - 2026-04-30
 
 ### Added
-- Inbox template — structured fleeting note with frontmatter (`tags: [fleeting]`, `status: unprocessed`)
-- `uteuk new inbox [title]` command to create structured inbox notes
-
-## [Unreleased] — Onboarding
-
-### Added
-- Interactive 5-step setup wizard during `uteuk init` (prerequisites, git, AI agent, plugins, verification)
+- Interactive 5-step setup wizard during `uteuk init` (pre-flight, git, AI agent, plugins, verification)
 - `uteuk doctor [vault]` — standalone pre-flight check (Node.js, git, vault path)
 - `uteuk setup ai` — interactive AI agent selection, API key entry, native key storage
 - `uteuk setup verify` — validate vault structure, git, templates, agent configs
-- `.uteuk/config.json` — onboarding state (active agent, key storage metadata)
-- `.gitignore` for from-scratch vaults (excludes workspace, OS, env files)
-- `--non-interactive`, `--skip-git`, `--skip-ai` flags on `uteuk init`
-- 6 AI agent profiles with auth guidance (Claude, Qwen, Gemini, OpenCode, OpenClaw)
-
-## [Unreleased] — AI Headless Integration
-
-### Added
 - `uteuk process` — process inbox notes with AI
 - `uteuk connect "[[A]]" "[[B]]"` — find connections between two notes
 - `uteuk moc "<topic>"` — build Maps of Content
 - `uteuk weekly-review` — comprehensive vault review
-- `src/agent.ts` — agent profiles, headless invocation, binary validation
+- `-v` short alias for `--version` flag
+- Global `--vault <path>` option on root program — local `--vault` takes precedence
+- `--json` flag on `status` and `templates` commands for machine-parseable output
+- Inbox template — structured fleeting note with frontmatter
+- `.uteuk/config.json` — onboarding state (active agent, key storage metadata)
+- `.gitignore` for from-scratch vaults (excludes workspace, OS, env files)
+- 6 AI agent profiles with headless invocation support (Claude, Qwen, Gemini, OpenCode, OpenClaw)
 - AI-enhanced `uteuk capture` — expands notes after creation
 - AI-enhanced `uteuk daily` — pre-populates daily notes
-- Graceful fallback to non-AI behavior when agent unavailable
+- `--non-interactive`, `--skip-git`, `--skip-ai` flags on `uteuk init`
+
+### Changed
+- `uteuk capture` and `uteuk daily` automatically use AI when agent available, with graceful fallback
+- `listTemplates()` returns `[]` silently when no templates dir exists (message moved to `printTemplates()`)
+
+### Added (CLI polish)
+- Usage examples in help text for all subcommands
+- Invalid command error handling lists available commands
+- `printStatusJson()` and `printTemplatesJson()` helper functions
+- `scanVault()` exported from `status.ts` for programmatic use
 
 ## [0.2.0] - 2026-04-29
 
