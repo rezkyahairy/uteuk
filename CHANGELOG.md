@@ -23,6 +23,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inbox template — structured fleeting note with frontmatter (`tags: [fleeting]`, `status: unprocessed`)
 - `uteuk new inbox [title]` command to create structured inbox notes
 
+## [Unreleased] — Onboarding
+
+### Added
+- Interactive 5-step setup wizard during `uteuk init` (prerequisites, git, AI agent, plugins, verification)
+- `uteuk doctor [vault]` — standalone pre-flight check (Node.js, git, vault path)
+- `uteuk setup ai` — interactive AI agent selection, API key entry, native key storage
+- `uteuk setup verify` — validate vault structure, git, templates, agent configs
+- `.uteuk/config.json` — onboarding state (active agent, key storage metadata)
+- `.gitignore` for from-scratch vaults (excludes workspace, OS, env files)
+- `--non-interactive`, `--skip-git`, `--skip-ai` flags on `uteuk init`
+- 6 AI agent profiles with auth guidance (Claude, Qwen, Gemini, OpenCode, OpenClaw)
+
 ## [0.2.0] - 2026-04-29
 
 ### Added
