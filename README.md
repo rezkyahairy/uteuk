@@ -67,8 +67,13 @@ Open your vault in your preferred AI coding assistant. The installed configs tel
 | `uteuk doctor [vault]` | Check system prerequisites (Node.js, git, vault path) |
 | `uteuk setup ai` | Configure AI agent settings and API keys |
 | `uteuk setup verify` | Verify vault setup is complete |
-| `uteuk capture "idea"` | Create a timestamped note in `00-Inbox/` |
+| `uteuk capture "idea"` | Create a note in `00-Inbox/` (AI-enhanced if agent available) |
+| `uteuk daily` | Create today's daily note (AI-prepared if agent available) |
 | `uteuk new <type> [title]` | Create a note from template (project, daily, resource, moc, task, inbox) |
+| `uteuk process` | Process inbox notes with AI |
+| `uteuk connect "[[A]]" "[[B]]"` | Find connections between two notes |
+| `uteuk moc "<topic>"` | Build a Map of Content |
+| `uteuk weekly-review` | Comprehensive vault review |
 | `uteuk templates` | List available note templates |
 | `uteuk status` | Check vault health — inbox count, orphans, stale MOCs, sync status |
 | `uteuk update` | Update prompts, templates, and commands to latest version |
