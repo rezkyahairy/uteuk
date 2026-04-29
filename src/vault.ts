@@ -1,5 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { resolve, join } from "node:path";
+import { execSync } from "node:child_process";
 import type { VaultState } from "./types.js";
 
 const PARA_FOLDERS = [
@@ -40,4 +41,80 @@ export function resolveVaultPath(input: string | undefined): string {
 
 export function validateVaultPath(vaultPath: string): boolean {
   return existsSync(vaultPath);
+}
+
+export function hasGitRepo(vaultPath: string): boolean {
+  return existsSync(join(vaultPath, ".git"));
+}
+
+export function hasGitRemote(vaultPath: string): boolean {
+  try {
+    const gitCmd = process.platform === "win32" ? "git" : "/usr/bin/git";
+    execSync(`${gitCmd} remote`, {
+      cwd: vaultPath,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function ensureGitRepo(
+  vaultPath: string,
+  options?: { userName?: string; userEmail?: string },
+): void {
+  const gitCmd = process.platform === "win32" ? "git" : "/usr/bin/git";
+  if (!hasGitRepo(vaultPath)) {
+    execSync(`${gitCmd} init`, { cwd: vaultPath });
+  }
+  if (options?.userName) {
+    execSync(`${gitCmd} config user.name "${options.userName}"`, {
+      cwd: vaultPath,
+    });
+  }
+  if (options?.userEmail) {
+    execSync(`${gitCmd} config user.email "${options.userEmail}"`, {
+      cwd: vaultPath,
+    });
+  }
+}
+
+export function addGitRemote(vaultPath: string, url: string): void {
+  const gitCmd = process.platform === "win32" ? "git" : "/usr/bin/git";
+  try {
+    execSync(`${gitCmd} remote add origin ${url}`, {
+      cwd: vaultPath,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+  } catch {
+    execSync(`${gitCmd} remote set-url origin ${url}`, {
+      cwd: vaultPath,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+  }
+}
+
+export function getGitUserConfig(): {
+  name: string | null;
+  email: string | null;
+} {
+  const gitCmd = process.platform === "win32" ? "git" : "/usr/bin/git";
+  let name: string | null = null;
+  let email: string | null = null;
+  try {
+    name = execSync(`${gitCmd} config --global user.name`, {
+      encoding: "utf-8",
+    }).trim();
+  } catch {
+    // not configured
+  }
+  try {
+    email = execSync(`${gitCmd} config --global user.email`, {
+      encoding: "utf-8",
+    }).trim();
+  } catch {
+    // not configured
+  }
+  return { name, email };
 }

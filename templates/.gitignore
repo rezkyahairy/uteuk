@@ -1,0 +1,10 @@
+# Obsidian workspace
+.obsidian/workspace
+.obsidian/workspace.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
