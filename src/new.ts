@@ -13,6 +13,7 @@ const NOTE_TYPE_MAP: Record<NoteType, string> = {
   resource: "03-Resources",
   moc: "03-Resources",
   task: "00-Inbox",
+  inbox: "00-Inbox",
 };
 
 export async function newCommand(
@@ -72,6 +73,7 @@ function getTemplateFile(
     resource: "Resource.md",
     moc: "MOC.md",
     task: "Task.md",
+    inbox: "Inbox.md",
   };
 
   const candidate = typeToFile[noteType];
@@ -107,6 +109,8 @@ function defaultNoteName(type: NoteType, dateStr: string): string {
       return `moc-${dateStr}`;
     case "task":
       return `task-${dateStr}`;
+    case "inbox":
+      return `inbox-${dateStr}`;
     default:
       return `${type}-${dateStr}`;
   }

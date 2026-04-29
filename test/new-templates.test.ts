@@ -237,11 +237,13 @@ describe("printTemplates", () => {
     logSpy.mockRestore();
   });
 
-  it("does nothing for empty template list", () => {
+  it("shows message for empty template list", () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     printTemplates([]);
 
-    expect(logSpy).not.toHaveBeenCalled();
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining("No templates found"),
+    );
 
     logSpy.mockRestore();
   });

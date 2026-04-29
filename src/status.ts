@@ -22,7 +22,7 @@ export async function statusCommand(
   printStatus(status);
 }
 
-async function scanVault(vaultPath: string): Promise<VaultStatus> {
+export async function scanVault(vaultPath: string): Promise<VaultStatus> {
   const inboxDir = join(vaultPath, "00-Inbox");
   const inboxCount = existsSync(inboxDir)
     ? readdirSync(inboxDir).filter((f) => f.endsWith(".md")).length
@@ -187,4 +187,14 @@ function printStatus(status: VaultStatus): void {
   }
 
   console.log();
+}
+
+export function printStatusJson(status: VaultStatus): void {
+  console.log(
+    JSON.stringify(
+      status,
+      (_, v) => (v instanceof Date ? v.toISOString() : v),
+      2,
+    ),
+  );
 }
